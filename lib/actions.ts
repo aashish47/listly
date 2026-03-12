@@ -1,12 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
-import { createClient } from "@/utils/supabase/server";
+import { prisma } from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const addWord = async (prevState: any, formData: FormData) => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const user = await supabase.auth.getUser();
 	const userId = user.data.user?.id;
 	if (!userId) {
@@ -23,7 +23,7 @@ export const addWord = async (prevState: any, formData: FormData) => {
 };
 
 export const deleteWord = async (id: number, prevState: any) => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const user = await supabase.auth.getUser();
 	const userId = user.data.user?.id;
 	if (!userId) {
@@ -42,7 +42,7 @@ export const deleteWord = async (id: number, prevState: any) => {
 };
 
 export const fetchVocabulary = async () => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const user = await supabase.auth.getUser();
 	const userId = user.data.user?.id;
 	if (!userId) {
@@ -59,7 +59,7 @@ export const fetchVocabulary = async () => {
 };
 
 export const fetchVocabularyByAlpha = async (alpha: string) => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const user = await supabase.auth.getUser();
 	const userId = user.data.user?.id;
 	if (!userId) {
@@ -76,7 +76,7 @@ export const fetchVocabularyByAlpha = async (alpha: string) => {
 };
 
 export const fetchWord = async (id: number) => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const user = await supabase.auth.getUser();
 	const userId = user.data.user?.id;
 	if (!userId) {
@@ -93,9 +93,9 @@ export const fetchWord = async (id: number) => {
 export const updateWord = async (
 	id: number,
 	prevState: any,
-	formData: FormData
+	formData: FormData,
 ) => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const user = await supabase.auth.getUser();
 	const userId = user.data.user?.id;
 	if (!userId) {
@@ -115,7 +115,7 @@ export const updateWord = async (
 };
 
 export const logout = async () => {
-	const supabase = createClient();
+	const supabase = await createClient();
 	const { error } = await supabase.auth.signOut();
 
 	if (error) {

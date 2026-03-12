@@ -1,5 +1,5 @@
 const Skeleton = () => {
-    return <div className="w-full h-10 rounded animate-pulse bg-slate-700" />;
+	return <div className="h-10 w-full animate-pulse rounded bg-slate-700" />;
 };
 
 export default Skeleton;

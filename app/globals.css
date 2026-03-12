@@ -1,60 +1,187 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+	--font-sans: "Inter", ui-sans-serif, system-ui;
+}
 
 @layer base {
-    ::-webkit-scrollbar {
-        @apply bg-neutral-800;
-    }
-    ::-webkit-scrollbar-thumb {
-        @apply bg-neutral-500;
-    }
-    h1 {
-        @apply text-2xl;
-    }
-    h2 {
-        @apply text-xl;
-    }
-    h3 {
-        @apply text-lg;
-    }
-    h4 {
-        @apply text-base;
-    }
-    h5 {
-        @apply text-sm;
-    }
-    h6 {
-        @apply text-xs;
-    }
+	::-webkit-scrollbar {
+		@apply bg-neutral-800;
+	}
+	::-webkit-scrollbar-thumb {
+		@apply bg-neutral-500;
+	}
+	/* Simple Typography reset */
+	h1 {
+		@apply text-2xl font-bold;
+	}
+	h2 {
+		@apply text-xl font-bold;
+	}
+	h3 {
+		@apply text-lg font-semibold;
+	}
+	h4 {
+		@apply text-base font-semibold;
+	}
+	h5 {
+		@apply text-sm font-medium;
+	}
+	h6 {
+		@apply text-xs font-medium;
+	}
+  * {
+    @apply border-border outline-ring/50;
+	}
+  body {
+    @apply bg-background text-foreground;
+	}
+  html {
+    @apply font-sans;
+	}
 }
 
 @layer components {
-    .btn-teal {
-        @apply p-2 rounded font-medium capitalize ring ring-teal-600 bg-teal-500 text-teal-100 hover:bg-teal-400 active:bg-teal-600 hover:transition;
-    }
-    .btn-fuchsia {
-        @apply p-2 rounded font-medium capitalize ring ring-fuchsia-600 bg-fuchsia-500 text-fuchsia-100 hover:bg-fuchsia-400 active:bg-fuchsia-600 hover:transition;
-    }
-    .btn-gray {
-        @apply p-2 rounded font-medium capitalize ring ring-gray-600 bg-gray-500 text-gray-100 hover:bg-gray-400 active:bg-gray-600 hover:transition;
-    }
-    .btn-purple {
-        @apply p-2 rounded font-medium capitalize ring ring-purple-600 bg-purple-500 text-purple-100 hover:bg-purple-400 active:bg-purple-600 hover:transition;
-    }
-    .btn-rose {
-        @apply p-2 rounded font-medium capitalize ring ring-rose-600 bg-rose-500 text-rose-100 hover:bg-rose-400 active:bg-rose-600 hover:transition;
-    }
-    .btn-white {
-        @apply p-2 rounded font-medium capitalize ring ring-neutral-300 bg-neutral-200 text-neutral-600 hover:bg-neutral-100 active:bg-neutral-300 hover:transition;
-    }
-    .btn-disabled {
-        @apply p-2 rounded font-medium capitalize ring ring-neutral-400 bg-neutral-300 text-neutral-600;
-    }
-    .bar-cyan {
-        @apply p-2 rounded capitalize bg-cyan-500 ring ring-cyan-600 text-cyan-100;
-    }
-    .bar-purple {
-        @apply p-2 rounded capitalize bg-purple-500 ring ring-purple-600 text-purple-100;
-    }
+	.btn-teal {
+		@apply rounded bg-teal-500 p-2 font-medium text-teal-100 capitalize ring-3 ring-teal-600 transition-colors hover:bg-teal-400 active:bg-teal-600;
+	}
+	.btn-fuchsia {
+		@apply rounded bg-fuchsia-500 p-2 font-medium text-fuchsia-100 capitalize ring-3 ring-fuchsia-600 transition-colors hover:bg-fuchsia-400 active:bg-fuchsia-600;
+	}
+	.btn-gray {
+		@apply rounded bg-gray-500 p-2 font-medium text-gray-100 capitalize ring-3 ring-gray-600 transition-colors hover:bg-gray-400 active:bg-gray-600;
+	}
+	.btn-purple {
+		@apply rounded bg-purple-500 p-2 font-medium text-purple-100 capitalize ring-3 ring-purple-600 transition-colors hover:bg-purple-400 active:bg-purple-600;
+	}
+	.btn-rose {
+		@apply rounded bg-rose-500 p-2 font-medium text-rose-100 capitalize ring-3 ring-rose-600 transition-colors hover:bg-rose-400 active:bg-rose-600;
+	}
+	.btn-white {
+		@apply rounded bg-neutral-200 p-2 font-medium text-neutral-600 capitalize ring-3 ring-neutral-300 transition-colors hover:bg-neutral-100 active:bg-neutral-300;
+	}
+	.btn-disabled {
+		@apply cursor-not-allowed rounded bg-neutral-300 p-2 font-medium text-neutral-600 capitalize ring-3 ring-neutral-400;
+	}
+	.bar-cyan {
+		@apply rounded bg-cyan-500 p-2 text-cyan-100 capitalize ring-3 ring-cyan-600;
+	}
+	.bar-purple {
+		@apply rounded bg-purple-500 p-2 text-purple-100 capitalize ring-3 ring-purple-600;
+	}
+}
+
+:root {
+	--background: oklch(1 0 0);
+	--foreground: oklch(0.145 0 0);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0 0);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+	--primary: oklch(0.205 0 0);
+	--primary-foreground: oklch(0.985 0 0);
+	--secondary: oklch(0.97 0 0);
+	--secondary-foreground: oklch(0.205 0 0);
+	--muted: oklch(0.97 0 0);
+	--muted-foreground: oklch(0.556 0 0);
+	--accent: oklch(0.97 0 0);
+	--accent-foreground: oklch(0.205 0 0);
+	--destructive: oklch(0.577 0.245 27.325);
+	--border: oklch(0.922 0 0);
+	--input: oklch(0.922 0 0);
+	--ring: oklch(0.708 0 0);
+	--chart-1: oklch(0.809 0.105 251.813);
+	--chart-2: oklch(0.623 0.214 259.815);
+	--chart-3: oklch(0.546 0.245 262.881);
+	--chart-4: oklch(0.488 0.243 264.376);
+	--chart-5: oklch(0.424 0.199 265.638);
+	--radius: 0.625rem;
+	--sidebar: oklch(0.985 0 0);
+	--sidebar-foreground: oklch(0.145 0 0);
+	--sidebar-primary: oklch(0.205 0 0);
+	--sidebar-primary-foreground: oklch(0.985 0 0);
+	--sidebar-accent: oklch(0.97 0 0);
+	--sidebar-accent-foreground: oklch(0.205 0 0);
+	--sidebar-border: oklch(0.922 0 0);
+	--sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+	--background: oklch(0.145 0 0);
+	--foreground: oklch(0.985 0 0);
+	--card: oklch(0.205 0 0);
+	--card-foreground: oklch(0.985 0 0);
+	--popover: oklch(0.205 0 0);
+	--popover-foreground: oklch(0.985 0 0);
+	--primary: oklch(0.922 0 0);
+	--primary-foreground: oklch(0.205 0 0);
+	--secondary: oklch(0.269 0 0);
+	--secondary-foreground: oklch(0.985 0 0);
+	--muted: oklch(0.269 0 0);
+	--muted-foreground: oklch(0.708 0 0);
+	--accent: oklch(0.269 0 0);
+	--accent-foreground: oklch(0.985 0 0);
+	--destructive: oklch(0.704 0.191 22.216);
+	--border: oklch(1 0 0 / 10%);
+	--input: oklch(1 0 0 / 15%);
+	--ring: oklch(0.556 0 0);
+	--chart-1: oklch(0.809 0.105 251.813);
+	--chart-2: oklch(0.623 0.214 259.815);
+	--chart-3: oklch(0.546 0.245 262.881);
+	--chart-4: oklch(0.488 0.243 264.376);
+	--chart-5: oklch(0.424 0.199 265.638);
+	--sidebar: oklch(0.205 0 0);
+	--sidebar-foreground: oklch(0.985 0 0);
+	--sidebar-primary: oklch(0.488 0.243 264.376);
+	--sidebar-primary-foreground: oklch(0.985 0 0);
+	--sidebar-accent: oklch(0.269 0 0);
+	--sidebar-accent-foreground: oklch(0.985 0 0);
+	--sidebar-border: oklch(1 0 0 / 10%);
+	--sidebar-ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+	--font-sans: var(--font-sans);
+	--color-sidebar-ring: var(--sidebar-ring);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar: var(--sidebar);
+	--color-chart-5: var(--chart-5);
+	--color-chart-4: var(--chart-4);
+	--color-chart-3: var(--chart-3);
+	--color-chart-2: var(--chart-2);
+	--color-chart-1: var(--chart-1);
+	--color-ring: var(--ring);
+	--color-input: var(--input);
+	--color-border: var(--border);
+	--color-destructive: var(--destructive);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-accent: var(--accent);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-muted: var(--muted);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary: var(--secondary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary: var(--primary);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-popover: var(--popover);
+	--color-card-foreground: var(--card-foreground);
+	--color-card: var(--card);
+	--color-foreground: var(--foreground);
+	--color-background: var(--background);
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
 }

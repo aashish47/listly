@@ -5,23 +5,23 @@ import { logout } from "@/lib/actions";
 import { useState } from "react";
 
 const LogoutButton = () => {
-    const [open, setOpen] = useState(false);
-    return (
-        <ModalButton
-            buttonContent="logout"
-            buttonClass="btn-gray"
-            open={open}
-            setOpen={setOpen}
-            modalContent={
-                <Confirm
-                    type="logout"
-                    description="You can always log back in at any time."
-                    action={logout}
-                    setOpen={setOpen}
-                />
-            }
-        />
-    );
+	const [open, setOpen] = useState(false);
+	return (
+		<ModalButton
+			buttonContent="logout"
+			buttonClass="btn-gray"
+			open={open}
+			setOpen={setOpen}
+			modalContent={
+				<Confirm
+					type="logout"
+					description="You can always log back in at any time."
+					action={logout}
+					setOpen={setOpen}
+				/>
+			}
+		/>
+	);
 };
 
 export default LogoutButton;

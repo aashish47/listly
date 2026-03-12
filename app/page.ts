@@ -1,14 +1,14 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 const Home = async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data?.user) {
-        redirect("/login");
-    } else {
-        redirect("/home");
-    }
+	const supabase = await createClient();
+	const { data, error } = await supabase.auth.getUser();
+	if (error || !data?.user) {
+		redirect("/login");
+	} else {
+		redirect("/home");
+	}
 };
 
 export default Home;
