@@ -9,13 +9,13 @@
 }
 
 @layer base {
-	::-webkit-scrollbar {
+	/* ::-webkit-scrollbar {
 		@apply bg-neutral-800;
 	}
 	::-webkit-scrollbar-thumb {
 		@apply bg-neutral-500;
-	}
-	/* Simple Typography reset */
+	} */
+	/* Simple Typography reset
 	h1 {
 		@apply text-2xl font-bold;
 	}
@@ -33,19 +33,25 @@
 	}
 	h6 {
 		@apply text-xs font-medium;
+	} */
+	* {
+		@apply border-border outline-ring/50;
 	}
-  * {
-    @apply border-border outline-ring/50;
+	body {
+		@apply bg-background text-foreground;
 	}
-  body {
-    @apply bg-background text-foreground;
+	html {
+		@apply font-sans;
 	}
-  html {
-    @apply font-sans;
+	button,
+	[type="button"],
+	[type="reset"],
+	[type="submit"] {
+		cursor: pointer;
 	}
 }
 
-@layer components {
+/* @layer components {
 	.btn-teal {
 		@apply rounded bg-teal-500 p-2 font-medium text-teal-100 capitalize ring-3 ring-teal-600 transition-colors hover:bg-teal-400 active:bg-teal-600;
 	}
@@ -73,7 +79,7 @@
 	.bar-purple {
 		@apply rounded bg-purple-500 p-2 text-purple-100 capitalize ring-3 ring-purple-600;
 	}
-}
+} */
 
 :root {
 	--background: oklch(1 0 0);

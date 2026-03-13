@@ -1,4 +1,5 @@
 import Modal from "@/components/Modal";
+import { Button } from "@/components/ui/button";
 
 interface ModalButtonProps {
 	buttonContent: any;
@@ -17,9 +18,13 @@ const ModalButton: React.FC<ModalButtonProps> = ({
 }) => {
 	return (
 		<>
-			<button className={buttonClass} onClick={() => setOpen(true)}>
+			<Button
+				variant="outline"
+				className="capitalize"
+				onClick={() => setOpen(true)}
+			>
 				{buttonContent}
-			</button>
+			</Button>
 			{open && <Modal>{modalContent}</Modal>}
 		</>
 	);

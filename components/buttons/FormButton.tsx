@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingButton from "@/components/buttons/LoadingButton";
+import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
 
 export const FormButton = ({
@@ -15,6 +16,9 @@ export const FormButton = ({
 	return pending ? (
 		<LoadingButton type={type} />
 	) : (
-		<button className={`w-full ${color}`}>{type}</button>
+		<Button variant={"outline"} className="w-full capitalize">
+			{type}
+		</Button>
+		// <button className={`w-full ${color}`}>{type}</button>
 	);
 };

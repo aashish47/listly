@@ -1,15 +1,23 @@
 import { DeleteButton, EditButton } from "@/components/buttons/wordActions";
+import {
+	Item,
+	ItemActions,
+	ItemContent,
+	ItemTitle,
+} from "@/components/ui/item";
 import { Vocabulary } from "@/generated/prisma/client";
 
 const Word = ({ id, word }: Vocabulary) => {
 	return (
-		<div className="bar-cyan mb-3 flex justify-between">
-			{word}
-			<div className="flex gap-4">
+		<Item variant="outline">
+			<ItemContent>
+				<ItemTitle className="capitalize">{word}</ItemTitle>
+			</ItemContent>
+			<ItemActions>
 				<EditButton id={id} word={word} />
 				<DeleteButton id={id} word={word} />
-			</div>
-		</div>
+			</ItemActions>
+		</Item>
 	);
 };
 

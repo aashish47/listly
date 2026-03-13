@@ -1,17 +1,20 @@
 "use client";
+import { Button } from "@/components/ui/button"; // Adjust path based on your setup
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
 export const AlphabetButton = ({ alpha }: { alpha: string }) => {
 	const params = useParams();
-	const color = alpha === params.alpha ? "btn-fuchsia" : "btn-purple";
+
+	const isActive = alpha === params.alpha;
+
 	return (
-		<Link href={`/${alpha}`} prefetch={false}>
-			<div
-				className={`flex h-8 w-8 items-center justify-center p-2 ${color} rounded font-medium capitalize ring-3 hover:transition`}
-			>
-				{alpha}
-			</div>
-		</Link>
+		<Button
+			asChild
+			variant={isActive ? "default" : "outline"}
+			className="h-10 w-10 capitalize"
+		>
+			<Link href={`/${alpha}`}>{alpha}</Link>
+		</Button>
 	);
 };
