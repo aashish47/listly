@@ -1,14 +1,36 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 model Vocabulary {
   id     Int    @id @default(autoincrement())
   userId String
   word   String
+}
+
+model List {
+  id        String     @id @default(cuid())
+  title     String
+  userId    String     
+  items     ListItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId])   
+}
+
+model ListItem {
+  id        String   @id @default(cuid())
+  title     String
+  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    String   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([listId, title])
 }
