@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -12,43 +13,78 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { format } from "date-fns";
 import { PencilIcon } from "lucide-react";
+import { useId, useState, useTransition } from "react";
+import { toast } from "sonner";
 
-const UpdateButton = () => {
+interface UpdateButtonProps {
+	title: string;
+	updateAction: any;
+}
+
+const UpdateButton = ({ title, updateAction }: UpdateButtonProps) => {
+	const [isPending, startTransition] = useTransition();
+	const [open, setOpen] = useState(false);
+	const formId = useId();
+
+	const handleAction = (formData: FormData) => {
+		startTransition(async () => {
+			const result = await updateAction(formData);
+			if (result.success) {
+				setOpen(false);
+			}
+			const toastType = result.success ? "success" : "error";
+			toast[toastType](result.message, {
+				description: format(result.date, "PPPPpp"),
+			});
+		});
+	};
+
 	return (
-		<Dialog>
-			<form>
-				<DialogTrigger asChild>
-					<Button variant="outline" size="icon">
-						<PencilIcon />
+		<Dialog open={open} onOpenChange={setOpen}>
+			<form action={handleAction} id={formId} />
+			<DialogTrigger asChild>
+				<Button variant="outline" size="icon">
+					<PencilIcon />
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="sm:max-w-sm">
+				<DialogHeader>
+					<DialogTitle>Edit</DialogTitle>
+					<DialogDescription>
+						Make changes to your list here. Click save when you&apos;re done.
+					</DialogDescription>
+				</DialogHeader>
+
+				<FieldGroup>
+					<Field>
+						<Label htmlFor="title-1">Title</Label>
+						<Input
+							form={formId}
+							id="title-1"
+							name="title"
+							defaultValue={title}
+						/>
+					</Field>
+				</FieldGroup>
+				<DialogFooter>
+					<DialogClose asChild>
+						<Button variant="outline">Cancel</Button>
+					</DialogClose>
+					<Button form={formId} type="submit" disabled={isPending}>
+						{isPending ? (
+							<>
+								<Spinner data-icon="inline-start" />
+								Updating...
+							</>
+						) : (
+							<>Save changes</>
+						)}
 					</Button>
-				</DialogTrigger>
-				<DialogContent className="sm:max-w-sm">
-					<DialogHeader>
-						<DialogTitle>Edit profile</DialogTitle>
-						<DialogDescription>
-							Make changes to your profile here. Click save when you&apos;re
-							done.
-						</DialogDescription>
-					</DialogHeader>
-					<FieldGroup>
-						<Field>
-							<Label htmlFor="name-1">Name</Label>
-							<Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-						</Field>
-						<Field>
-							<Label htmlFor="username-1">Username</Label>
-							<Input id="username-1" name="username" defaultValue="@peduarte" />
-						</Field>
-					</FieldGroup>
-					<DialogFooter>
-						<DialogClose asChild>
-							<Button variant="outline">Cancel</Button>
-						</DialogClose>
-						<Button type="submit">Save changes</Button>
-					</DialogFooter>
-				</DialogContent>
-			</form>
+				</DialogFooter>
+			</DialogContent>
 		</Dialog>
 	);
 };

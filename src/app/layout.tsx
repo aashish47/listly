@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Inter } from "next/font/google";
@@ -36,6 +37,7 @@ export default function RootLayout({
 							{children}
 						</div>
 					</div>
+					<Toaster richColors closeButton />
 				</ThemeProvider>
 			</body>
 		</html>

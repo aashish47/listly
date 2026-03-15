@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 export async function getSessionUser() {
 	const supabase = await createClient();
@@ -8,7 +9,7 @@ export async function getSessionUser() {
 	} = await supabase.auth.getUser();
 
 	if (error || !user) {
-		throw new Error("Unauthorized");
+		redirect("/login");
 	}
 
 	return user;

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
 import { revalidatePath } from "next/cache";
 
-export const addList = async (prevState: any, formData: FormData) => {
+export const addList = async (formData: FormData, prevState: any) => {
 	const user = await getSessionUser();
 	try {
 		const title = (formData.get("word") as string).trim();
@@ -12,9 +12,18 @@ export const addList = async (prevState: any, formData: FormData) => {
 			data: { title, userId: user.id },
 		});
 		revalidatePath("/");
-		return { message: `Success! ${title} added`, date: Date.now() };
+		return {
+			success: true,
+			message: `List added successfully`,
+			date: Date.now(),
+		};
 	} catch (err: any) {
-		throw new Error(`Error adding list ${err}`);
+		console.error("ADD_LIST_ERROR:", err);
+		return {
+			success: false,
+			message: `Something went wrong. The item couldn't be added.`,
+			date: Date.now(),
+		};
 	}
 };
 
@@ -26,27 +35,45 @@ export const deleteList = async (id: string, prevState: any) => {
 		}
 		await prisma.list.delete({ where: { id, userId: user.id } });
 		revalidatePath("/");
-		return { message: `Deleted!`, date: Date.now() };
+		return {
+			success: true,
+			message: "List deleted successfully",
+			date: Date.now(),
+		};
 	} catch (err) {
-		throw new Error(`Error deleting word ${err}`);
+		console.error("DELETE_LIST_ERROR:", err);
+		return {
+			success: false,
+			message: "Something went wrong. The item couldn't be deleted.",
+			date: Date.now(),
+		};
 	}
 };
 
 export const updateList = async (
 	id: string,
-	prevState: any,
 	formData: FormData,
+	prevState: any,
 ) => {
 	const user = await getSessionUser();
 	try {
-		const title = formData.get("word") as string;
+		const title = formData.get("title") as string;
 		await prisma.list.update({
 			where: { id, userId: user.id },
 			data: { title },
 		});
 		revalidatePath("/");
-		return { message: `Updated!`, date: Date.now() };
+		return {
+			success: true,
+			message: "List updated successfully",
+			date: Date.now(),
+		};
 	} catch (err) {
-		throw new Error(`Error updating word ${err}`);
+		console.error("UPDATE_LIST_ERROR:", err);
+		return {
+			success: false,
+			message: "Something went wrong. The item couldn't be updated.",
+			date: Date.now(),
+		};
 	}
 };

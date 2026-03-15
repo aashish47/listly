@@ -6,51 +6,80 @@ import { revalidatePath } from "next/cache";
 
 export const addListItem = async (
 	listId: string,
-	prevState: any,
 	formData: FormData,
+	prevState: any,
 ) => {
 	const user = await getSessionUser();
+
 	try {
 		const title = (formData.get("word") as string).trim();
 		await prisma.listItem.create({
 			data: { title, listId },
 		});
 		revalidatePath("/");
-		return { message: `Success! ${title} added`, date: Date.now() };
+		return {
+			success: true,
+			message: `Item added successfully`,
+			date: Date.now(),
+		};
 	} catch (err: any) {
-		throw new Error(`Error adding list ${err}`);
+		console.error("ADD_LIST_ITEM_ERROR:", err);
+		return {
+			success: false,
+			message: `Something went wrong. The item couldn't be added.`,
+			date: Date.now(),
+		};
 	}
 };
 
 export const deleteListItem = async (id: string, prevState: any) => {
 	const user = await getSessionUser();
+
 	try {
 		if (!id) {
 			throw new Error("id invalid");
 		}
 		await prisma.listItem.delete({ where: { id } });
 		revalidatePath("/");
-		return { message: `Deleted!`, date: Date.now() };
+		return {
+			success: true,
+			message: `Item deleted successfully`,
+			date: Date.now(),
+		};
 	} catch (err) {
-		throw new Error(`Error deleting word ${err}`);
+		console.error("DELETE_LIST_ITEM_ERROR:", err);
+		return {
+			success: false,
+			message: `Something went wrong. The item couldn't be deleted.`,
+			date: Date.now(),
+		};
 	}
 };
 
 export const updateListItem = async (
 	id: string,
-	prevState: any,
 	formData: FormData,
+	prevState: any,
 ) => {
 	const user = await getSessionUser();
 	try {
-		const title = formData.get("word") as string;
+		const title = formData.get("title") as string;
 		await prisma.listItem.update({
 			where: { id },
 			data: { title },
 		});
 		revalidatePath("/");
-		return { message: `Updated!`, date: Date.now() };
+		return {
+			success: true,
+			message: `Item updated successfully`,
+			date: Date.now(),
+		};
 	} catch (err) {
-		throw new Error(`Error updating word ${err}`);
+		console.error("UPDATE_LIST_ITEM_ERROR:", err);
+		return {
+			success: false,
+			message: `Something went wrong. The item couldn't be updated.`,
+			date: Date.now(),
+		};
 	}
 };

@@ -15,25 +15,7 @@
 	::-webkit-scrollbar-thumb {
 		@apply bg-neutral-500;
 	} */
-	/* Simple Typography reset
-	h1 {
-		@apply text-2xl font-bold;
-	}
-	h2 {
-		@apply text-xl font-bold;
-	}
-	h3 {
-		@apply text-lg font-semibold;
-	}
-	h4 {
-		@apply text-base font-semibold;
-	}
-	h5 {
-		@apply text-sm font-medium;
-	}
-	h6 {
-		@apply text-xs font-medium;
-	} */
+
 	* {
 		@apply border-border outline-ring/50;
 	}
@@ -50,36 +32,6 @@
 		cursor: pointer;
 	}
 }
-
-/* @layer components {
-	.btn-teal {
-		@apply rounded bg-teal-500 p-2 font-medium text-teal-100 capitalize ring-3 ring-teal-600 transition-colors hover:bg-teal-400 active:bg-teal-600;
-	}
-	.btn-fuchsia {
-		@apply rounded bg-fuchsia-500 p-2 font-medium text-fuchsia-100 capitalize ring-3 ring-fuchsia-600 transition-colors hover:bg-fuchsia-400 active:bg-fuchsia-600;
-	}
-	.btn-gray {
-		@apply rounded bg-gray-500 p-2 font-medium text-gray-100 capitalize ring-3 ring-gray-600 transition-colors hover:bg-gray-400 active:bg-gray-600;
-	}
-	.btn-purple {
-		@apply rounded bg-purple-500 p-2 font-medium text-purple-100 capitalize ring-3 ring-purple-600 transition-colors hover:bg-purple-400 active:bg-purple-600;
-	}
-	.btn-rose {
-		@apply rounded bg-rose-500 p-2 font-medium text-rose-100 capitalize ring-3 ring-rose-600 transition-colors hover:bg-rose-400 active:bg-rose-600;
-	}
-	.btn-white {
-		@apply rounded bg-neutral-200 p-2 font-medium text-neutral-600 capitalize ring-3 ring-neutral-300 transition-colors hover:bg-neutral-100 active:bg-neutral-300;
-	}
-	.btn-disabled {
-		@apply cursor-not-allowed rounded bg-neutral-300 p-2 font-medium text-neutral-600 capitalize ring-3 ring-neutral-400;
-	}
-	.bar-cyan {
-		@apply rounded bg-cyan-500 p-2 text-cyan-100 capitalize ring-3 ring-cyan-600;
-	}
-	.bar-purple {
-		@apply rounded bg-purple-500 p-2 text-purple-100 capitalize ring-3 ring-purple-600;
-	}
-} */
 
 :root {
 	--background: oklch(1 0 0);

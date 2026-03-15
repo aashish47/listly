@@ -1,6 +1,6 @@
 import HomeButton from "@/components/buttons/HomeButton";
 import LogoutButton from "@/components/buttons/LogoutButton";
-import { ModeToggle } from "@/components/ModeToggle";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const Navbar = () => {
 	return (
