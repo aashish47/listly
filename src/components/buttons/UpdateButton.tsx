@@ -21,7 +21,11 @@ import { toast } from "sonner";
 
 interface UpdateButtonProps {
 	title: string;
-	updateAction: any;
+	updateAction: (formData: FormData) => Promise<{
+		success: boolean;
+		message: string;
+		date: number;
+	}>;
 }
 
 const UpdateButton = ({ title, updateAction }: UpdateButtonProps) => {

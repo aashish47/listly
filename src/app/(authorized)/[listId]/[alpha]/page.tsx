@@ -1,9 +1,10 @@
+import { EmptyList } from "@/components/EmptyList";
+import FallbackList from "@/components/FallbackList";
 import ListItems from "@/components/ListItems";
-import NoWord from "@/components/NoWord";
 import { fetchListItemsByAlpha } from "@/lib/data/list-item-queries";
 import { prisma } from "@/lib/prisma";
 import alphabets from "@/utils/alphabets";
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 export async function generateStaticParams() {
 	const lists = await prisma.list.findMany({
@@ -23,17 +24,27 @@ const Home = async ({
 }: {
 	params: Promise<{ listId: string; alpha: string }>;
 }) => {
-	const { listId, alpha } = await params;
-	const regex = /^[a-zA-Z]$/;
-	if (!regex.test(alpha)) {
-		notFound();
-	}
-	const listItems = await fetchListItemsByAlpha(alpha, listId);
+	return (
+		<Suspense fallback={<FallbackList size={4} height={12} />}>
+			<ListItemsWrapper params={params} />
+		</Suspense>
+	);
+};
 
+const ListItemsWrapper = async ({
+	params,
+}: {
+	params: Promise<{
+		listId: string;
+		alpha: string;
+	}>;
+}) => {
+	const { listId, alpha } = await params;
+	const listItems = await fetchListItemsByAlpha(listId, alpha);
 	return listItems.length > 0 ? (
 		<ListItems listItems={listItems} />
 	) : (
-		<NoWord />
+		<EmptyList type="alpha" />
 	);
 };
 

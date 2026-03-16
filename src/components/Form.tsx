@@ -7,23 +7,15 @@ import React, { useTransition } from "react";
 import { toast } from "sonner";
 
 interface FormProps {
-	action: any;
-	inputDefault: string;
-	buttonType: string;
-	color: string;
+	action: (formData: FormData) => Promise<{
+		success: boolean;
+		message: string;
+		date: number;
+	}>;
+	buttonName: "create" | "add";
 }
 
-const initalState = {
-	message: "",
-	date: null,
-};
-
-const Form: React.FC<FormProps> = ({
-	action,
-	inputDefault,
-	buttonType,
-	color,
-}) => {
+const Form: React.FC<FormProps> = ({ action, buttonName }) => {
 	const [isPending, startTransition] = useTransition();
 
 	const handleAction = (formData: FormData) => {
@@ -38,27 +30,17 @@ const Form: React.FC<FormProps> = ({
 
 	return (
 		<form action={handleAction} className="flex flex-col gap-2">
-			<Input
-				required
-				defaultValue={inputDefault}
-				placeholder="Word..."
-				type="text"
-				name="word"
-			/>
-			<Button
-				variant="secondary"
-				type="submit"
-				// size={isPending ? "default" : "icon"}
-				className="w-full"
-				disabled={isPending}
-			>
+			<Input required placeholder="vocabulary..." type="text" name="title" />
+			<Button type="submit" className="w-full" disabled={isPending}>
 				{isPending ? (
 					<>
 						<Spinner data-icon="inline-start" />
-						Adding...
+						<span className="capitalize">
+							{buttonName === "add" ? "adding..." : "creating..."}
+						</span>
 					</>
 				) : (
-					<>Add</>
+					<span className="capitalize">{buttonName}</span>
 				)}
 			</Button>
 		</form>

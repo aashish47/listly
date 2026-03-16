@@ -8,7 +8,6 @@ export default async function Layout({
 	return (
 		<>
 			<Navbar />
-			<h1 className="text-center capitalize">vocabulary</h1>
 			{children}
 		</>
 	);

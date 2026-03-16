@@ -21,7 +21,11 @@ import { toast } from "sonner";
 
 interface DeleteButtonProps {
 	title: string;
-	deleteAction: any;
+	deleteAction: () => Promise<{
+		success: boolean;
+		message: string;
+		date: number;
+	}>;
 }
 
 export default function DeleteButton({

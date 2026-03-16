@@ -17,7 +17,7 @@ export const fetchListItems = async (listId: string) => {
 	}
 };
 
-export const fetchListItemsByAlpha = async (alpha: string, listId: string) => {
+export const fetchListItemsByAlpha = async (listId: string, alpha: string) => {
 	cacheLife("max");
 	cacheTag(`list-${listId}-${alpha}`);
 

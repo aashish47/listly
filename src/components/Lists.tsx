@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatedList, AnimatedListItem } from "@/components/AnimatedList";
 import DeleteButton from "@/components/buttons/DeleteButton";
 import UpdateButton from "@/components/buttons/UpdateButton";
 import {
@@ -10,90 +11,38 @@ import {
 } from "@/components/ui/item";
 import { deleteList, updateList } from "@/lib/actions/list-actions";
 import { List } from "@prisma/client";
-import { AnimatePresence, motion, Variants } from "framer-motion";
 import Link from "next/link";
 
 interface ListsProps {
 	lists: List[];
 }
 
-const containerVariants = {
-	hidden: { opacity: 0 },
-	visible: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.1,
-		},
-	},
-};
-
-const itemVariants: Variants = {
-	hidden: { opacity: 0, y: 20 },
-	visible: {
-		opacity: 1,
-		y: 0,
-		transition: {
-			type: "spring",
-			stiffness: 300,
-			damping: 24,
-		},
-	},
-	removed: {
-		opacity: 0,
-		scale: 0.5,
-		transition: { duration: 0.15 },
-	},
-} as const;
-
 const Lists = ({ lists }: ListsProps) => {
 	return (
-		<motion.ul
-			variants={containerVariants}
-			initial="hidden"
-			animate="visible"
-			className="flex flex-col gap-3"
-		>
-			<AnimatePresence mode="popLayout">
-				{lists.map(({ id, title }) => {
-					const updateListWithId = updateList.bind(null, id);
-					const deleteListWithId = deleteList.bind(null, id);
-					return (
-						<motion.li
-							key={id}
-							variants={itemVariants}
-							exit="removed"
-							layout
-							transition={{
-								type: "spring",
-								stiffness: 300,
-								damping: 24,
-							}}
-						>
-							<Item variant="outline" className="group relative">
-								<Link href={`/${id}`} className="block w-full py-1.5">
-									<ItemContent>
-										<ItemTitle>{title}</ItemTitle>
-									</ItemContent>
-								</Link>
+		<AnimatedList>
+			{lists.map(({ id, title }) => {
+				const updateListWithId = updateList.bind(null, id);
+				const deleteListWithId = deleteList.bind(null, id);
+				return (
+					<AnimatedListItem key={id}>
+						<Item variant="outline" className="group relative">
+							<Link href={`/${id}`} className="block w-full py-1.5">
+								<ItemContent>
+									<ItemTitle>{title}</ItemTitle>
+								</ItemContent>
+							</Link>
 
-								<div className="absolute right-2.5">
-									<ItemActions>
-										<UpdateButton
-											title={title}
-											updateAction={updateListWithId}
-										/>
-										<DeleteButton
-											title={title}
-											deleteAction={deleteListWithId}
-										/>
-									</ItemActions>
-								</div>
-							</Item>
-						</motion.li>
-					);
-				})}
-			</AnimatePresence>
-		</motion.ul>
+							<div className="absolute right-2.5">
+								<ItemActions>
+									<UpdateButton title={title} updateAction={updateListWithId} />
+									<DeleteButton title={title} deleteAction={deleteListWithId} />
+								</ItemActions>
+							</div>
+						</Item>
+					</AnimatedListItem>
+				);
+			})}
+		</AnimatedList>
 	);
 };
 

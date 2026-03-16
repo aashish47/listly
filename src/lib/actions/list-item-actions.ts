@@ -4,15 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
 import { updateTag } from "next/cache";
 
-export const addListItem = async (
-	listId: string,
-	formData: FormData,
-	prevState: any,
-) => {
+export const addListItem = async (listId: string, formData: FormData) => {
 	const user = await getSessionUser();
 
 	try {
-		const title = (formData.get("word") as string).trim();
+		const title = (formData.get("title") as string).trim();
 		await prisma.listItem.create({
 			data: { title, listId },
 		});
@@ -35,11 +31,7 @@ export const addListItem = async (
 	}
 };
 
-export const deleteListItem = async (
-	id: string,
-	prevTitle: string,
-	prevState: any,
-) => {
+export const deleteListItem = async (id: string, prevTitle: string) => {
 	const user = await getSessionUser();
 
 	try {
@@ -69,7 +61,6 @@ export const updateListItem = async (
 	id: string,
 	prevTitle: string,
 	formData: FormData,
-	prevState: any,
 ) => {
 	const user = await getSessionUser();
 	try {
