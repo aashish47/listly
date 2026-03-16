@@ -56,12 +56,12 @@ const ListItems = ({ listItems }: ListItemsProps) => {
 			className="flex flex-col gap-3"
 		>
 			<AnimatePresence mode="popLayout">
-				{listItems.map((listItem) => {
-					const updateListItemWithId = updateListItem.bind(null, listItem.id);
-					const deleteListItemWithId = deleteListItem.bind(null, listItem.id);
+				{listItems.map(({ id, title }) => {
+					const updateListItemWithId = updateListItem.bind(null, id, title);
+					const deleteListItemWithId = deleteListItem.bind(null, id, title);
 					return (
 						<motion.li
-							key={listItem.id}
+							key={id}
 							variants={itemVariants}
 							exit="removed"
 							layout
@@ -73,15 +73,15 @@ const ListItems = ({ listItems }: ListItemsProps) => {
 						>
 							<Item variant="outline">
 								<ItemContent>
-									<ItemTitle className="break-all">{listItem.title}</ItemTitle>
+									<ItemTitle className="break-all">{title}</ItemTitle>
 								</ItemContent>
 								<ItemActions>
 									<UpdateButton
-										title={listItem.title}
+										title={title}
 										updateAction={updateListItemWithId}
 									/>
 									<DeleteButton
-										title={listItem.title}
+										title={title}
 										deleteAction={deleteListItemWithId}
 									/>
 								</ItemActions>

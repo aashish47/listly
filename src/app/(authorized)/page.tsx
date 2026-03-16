@@ -3,9 +3,11 @@ import Lists from "@/components/Lists";
 import NoWord from "@/components/NoWord";
 import { addList } from "@/lib/actions/list-actions";
 import { fetchLists } from "@/lib/data/list-queries";
+import { getSessionUser } from "@/lib/supabase/auth-utils";
 
 const Page = async () => {
-	const lists = await fetchLists();
+	const user = await getSessionUser();
+	const lists = await fetchLists(user);
 	return (
 		<>
 			<Form

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
-import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 
 export const addListItem = async (
 	listId: string,
@@ -16,7 +16,10 @@ export const addListItem = async (
 		await prisma.listItem.create({
 			data: { title, listId },
 		});
-		revalidatePath("/");
+
+		updateTag(`list-${listId}`);
+		updateTag(`list-${listId}-${title.charAt(0)}`);
+
 		return {
 			success: true,
 			message: `Item added successfully`,
@@ -32,15 +35,21 @@ export const addListItem = async (
 	}
 };
 
-export const deleteListItem = async (id: string, prevState: any) => {
+export const deleteListItem = async (
+	id: string,
+	prevTitle: string,
+	prevState: any,
+) => {
 	const user = await getSessionUser();
 
 	try {
 		if (!id) {
 			throw new Error("id invalid");
 		}
-		await prisma.listItem.delete({ where: { id } });
-		revalidatePath("/");
+		const { listId, title } = await prisma.listItem.delete({ where: { id } });
+		updateTag(`list-${listId}`);
+		updateTag(`list-${listId}-${title.charAt(0)}`);
+		updateTag(`list-${listId}-${prevTitle.charAt(0)}`);
 		return {
 			success: true,
 			message: `Item deleted successfully`,
@@ -58,17 +67,22 @@ export const deleteListItem = async (id: string, prevState: any) => {
 
 export const updateListItem = async (
 	id: string,
+	prevTitle: string,
 	formData: FormData,
 	prevState: any,
 ) => {
 	const user = await getSessionUser();
 	try {
 		const title = formData.get("title") as string;
-		await prisma.listItem.update({
+		const { listId } = await prisma.listItem.update({
 			where: { id },
 			data: { title },
 		});
-		revalidatePath("/");
+
+		updateTag(`list-${listId}`);
+		updateTag(`list-${listId}-${title.charAt(0)}`);
+		updateTag(`list-${listId}-${prevTitle.charAt(0)}`);
+
 		return {
 			success: true,
 			message: `Item updated successfully`,

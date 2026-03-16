@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
-import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 
 export const addList = async (formData: FormData, prevState: any) => {
 	const user = await getSessionUser();
@@ -11,7 +11,7 @@ export const addList = async (formData: FormData, prevState: any) => {
 		await prisma.list.create({
 			data: { title, userId: user.id },
 		});
-		revalidatePath("/");
+		updateTag("lists");
 		return {
 			success: true,
 			message: `List added successfully`,
@@ -34,7 +34,7 @@ export const deleteList = async (id: string, prevState: any) => {
 			throw new Error("id invalid");
 		}
 		await prisma.list.delete({ where: { id, userId: user.id } });
-		revalidatePath("/");
+		updateTag("lists");
 		return {
 			success: true,
 			message: "List deleted successfully",
@@ -62,7 +62,7 @@ export const updateList = async (
 			where: { id, userId: user.id },
 			data: { title },
 		});
-		revalidatePath("/");
+		updateTag("lists");
 		return {
 			success: true,
 			message: "List updated successfully",

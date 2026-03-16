@@ -54,12 +54,12 @@ const Lists = ({ lists }: ListsProps) => {
 			className="flex flex-col gap-3"
 		>
 			<AnimatePresence mode="popLayout">
-				{lists.map((list) => {
-					const updateListWithId = updateList.bind(null, list.id);
-					const deleteListWithId = deleteList.bind(null, list.id);
+				{lists.map(({ id, title }) => {
+					const updateListWithId = updateList.bind(null, id);
+					const deleteListWithId = deleteList.bind(null, id);
 					return (
 						<motion.li
-							key={list.id}
+							key={id}
 							variants={itemVariants}
 							exit="removed"
 							layout
@@ -70,20 +70,20 @@ const Lists = ({ lists }: ListsProps) => {
 							}}
 						>
 							<Item variant="outline" className="group relative">
-								<Link href={`/${list.id}`} className="block w-full py-1.5">
+								<Link href={`/${id}`} className="block w-full py-1.5">
 									<ItemContent>
-										<ItemTitle>{list.title}</ItemTitle>
+										<ItemTitle>{title}</ItemTitle>
 									</ItemContent>
 								</Link>
 
 								<div className="absolute right-2.5">
 									<ItemActions>
 										<UpdateButton
-											title={list.title}
+											title={title}
 											updateAction={updateListWithId}
 										/>
 										<DeleteButton
-											title={list.title}
+											title={title}
 											deleteAction={deleteListWithId}
 										/>
 									</ItemActions>

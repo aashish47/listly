@@ -1,8 +1,10 @@
+"use cache";
 import { prisma } from "@/lib/prisma";
-import { getSessionUser } from "@/lib/supabase/auth-utils";
+import { cacheLife, cacheTag } from "next/cache";
 
 export const fetchListItems = async (listId: string) => {
-	const user = await getSessionUser();
+	cacheLife("max");
+	cacheTag(`list-${listId}`);
 
 	try {
 		return await prisma.listItem.findMany({
@@ -16,7 +18,9 @@ export const fetchListItems = async (listId: string) => {
 };
 
 export const fetchListItemsByAlpha = async (alpha: string, listId: string) => {
-	const user = getSessionUser();
+	cacheLife("max");
+	cacheTag(`list-${listId}-${alpha}`);
+
 	try {
 		return await prisma.listItem.findMany({
 			orderBy: { title: "asc" },

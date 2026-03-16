@@ -1,6 +1,6 @@
 "use client";
-import Input from "@/components/Input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { format } from "date-fns";
 import React, { useTransition } from "react";
@@ -38,7 +38,13 @@ const Form: React.FC<FormProps> = ({
 
 	return (
 		<form action={handleAction} className="flex flex-col gap-2">
-			<Input defaultValue={inputDefault} />
+			<Input
+				required
+				defaultValue={inputDefault}
+				placeholder="Word..."
+				type="text"
+				name="word"
+			/>
 			<Button
 				variant="secondary"
 				type="submit"
