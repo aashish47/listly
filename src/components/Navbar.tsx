@@ -1,13 +1,13 @@
 import HomeButton from "@/components/buttons/HomeButton";
 import LogoutButton from "@/components/buttons/LogoutButton";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggleButton } from "@/components/buttons/ModeToggleButton";
 
 const Navbar = () => {
 	return (
 		<div className="flex items-center justify-between">
 			<div className="flex items-center gap-2">
 				<HomeButton />
-				<ModeToggle />
+				<ModeToggleButton />
 			</div>
 			<LogoutButton />
 		</div>

@@ -14,6 +14,7 @@ import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import { ActionPromise } from "@/types/actions";
 import { format } from "date-fns";
 import { PencilIcon } from "lucide-react";
 import { useId, useState, useTransition } from "react";
@@ -21,11 +22,7 @@ import { toast } from "sonner";
 
 interface UpdateButtonProps {
 	title: string;
-	updateAction: (formData: FormData) => Promise<{
-		success: boolean;
-		message: string;
-		date: number;
-	}>;
+	updateAction: (formData: FormData) => ActionPromise;
 }
 
 const UpdateButton = ({ title, updateAction }: UpdateButtonProps) => {

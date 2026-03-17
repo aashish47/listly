@@ -1,11 +1,10 @@
-import Alphabets from "@/components/Alphabets";
-import FallbackList from "@/components/FallbackList";
+import AlphabetButtons from "@/components/buttons/AlphabetButtons";
+import ListButton from "@/components/buttons/ListButton";
+import FallbackSkeleton from "@/components/FallbackSkeleton";
 import Form from "@/components/Form";
-import { Button } from "@/components/ui/button";
+import { HEADER_HEIGHT, ICON_HEIGHT } from "@/constants/dimensions";
 import { addListItem } from "@/lib/actions/list-item-actions";
-import { fetchListById } from "@/lib/data/list-queries";
-import { getSessionUser } from "@/lib/supabase/auth-utils";
-import Link from "next/link";
+import { ListParamsPromise } from "@/types/params";
 
 import React, { Suspense } from "react";
 
@@ -13,19 +12,19 @@ export default async function Layout({
 	params,
 	children,
 }: {
-	params: Promise<{ listId: string }>;
+	params: ListParamsPromise;
 	children: React.ReactNode;
 }) {
 	return (
 		<>
-			<Suspense fallback={<FallbackList size={1} height={12} />}>
+			<Suspense fallback={<FallbackSkeleton size={1} height={HEADER_HEIGHT} />}>
 				<ListButton params={params} />
 			</Suspense>
-			<Suspense fallback={<FallbackList size={1} height={10} />}>
+			<Suspense fallback={<FallbackSkeleton size={2} height={ICON_HEIGHT} />}>
 				<FormWrapper params={params} />
 			</Suspense>
-			<Suspense fallback={<FallbackList size={2} height={8} />}>
-				<Alphabets />
+			<Suspense fallback={<FallbackSkeleton size={2} height={ICON_HEIGHT} />}>
+				<AlphabetButtons />
 			</Suspense>
 
 			{children}
@@ -33,28 +32,7 @@ export default async function Layout({
 	);
 }
 
-const ListButton = async ({
-	params,
-}: {
-	params: Promise<{ listId: string }>;
-}) => {
-	const { listId } = await params;
-	const user = await getSessionUser();
-	const { title } = await fetchListById(user.id, listId);
-	return (
-		<Button asChild variant="secondary" className="h-12">
-			<Link href={`/${listId}`}>{title}</Link>
-		</Button>
-	);
-};
-
-const FormWrapper = async ({
-	params,
-}: {
-	params: Promise<{
-		listId: string;
-	}>;
-}) => {
+const FormWrapper = async ({ params }: { params: ListParamsPromise }) => {
 	const { listId } = await params;
 	const addListItemWithId = addListItem.bind(null, listId);
 	return <Form action={addListItemWithId} buttonName="add" />;

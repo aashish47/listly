@@ -1,24 +1,20 @@
-import { EmptyList } from "@/components/EmptyList";
-import FallbackList from "@/components/FallbackList";
-import ListItems from "@/components/ListItems";
+import FallbackSkeleton from "@/components/FallbackSkeleton";
+import { EmptyList } from "@/components/items/EmptyList";
+import ListItems from "@/components/items/ListItems";
+import { ITEM_HEIGHT } from "@/constants/dimensions";
 import { fetchListItems } from "@/lib/data/list-item-queries";
+import { ListParamsPromise } from "@/types/params";
 import { Suspense } from "react";
 
-const Page = async ({ params }: { params: Promise<{ listId: string }> }) => {
+const Page = async ({ params }: { params: ListParamsPromise }) => {
 	return (
-		<Suspense fallback={<FallbackList size={4} height={12} />}>
+		<Suspense fallback={<FallbackSkeleton size={4} height={ITEM_HEIGHT} />}>
 			<ListItemsWrapper params={params} />
 		</Suspense>
 	);
 };
 
-const ListItemsWrapper = async ({
-	params,
-}: {
-	params: Promise<{
-		listId: string;
-	}>;
-}) => {
+const ListItemsWrapper = async ({ params }: { params: ListParamsPromise }) => {
 	const { listId } = await params;
 	const listItems = await fetchListItems(listId);
 	return listItems.length > 0 ? (

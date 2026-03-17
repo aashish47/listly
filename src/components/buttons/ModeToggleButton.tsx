@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AnimatePresence, motion } from "framer-motion";
 
-export function ModeToggle() {
+export function ModeToggleButton() {
 	const { theme, setTheme } = useTheme();
 
 	return (

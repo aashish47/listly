@@ -2,16 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { ActionPromise } from "@/types/actions";
 import { format } from "date-fns";
 import React, { useTransition } from "react";
 import { toast } from "sonner";
 
 interface FormProps {
-	action: (formData: FormData) => Promise<{
-		success: boolean;
-		message: string;
-		date: number;
-	}>;
+	action: (formData: FormData) => ActionPromise;
 	buttonName: "create" | "add";
 }
 

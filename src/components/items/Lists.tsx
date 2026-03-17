@@ -1,14 +1,18 @@
 "use client";
 
-import { AnimatedList, AnimatedListItem } from "@/components/AnimatedList";
 import DeleteButton from "@/components/buttons/DeleteButton";
 import UpdateButton from "@/components/buttons/UpdateButton";
+import {
+	AnimatedList,
+	AnimatedListItem,
+} from "@/components/items/AnimatedList";
 import {
 	Item,
 	ItemActions,
 	ItemContent,
 	ItemTitle,
 } from "@/components/ui/item";
+import { ITEM_HEIGHT } from "@/constants/dimensions";
 import { deleteList, updateList } from "@/lib/actions/list-actions";
 import { List } from "@prisma/client";
 import Link from "next/link";
@@ -25,7 +29,10 @@ const Lists = ({ lists }: ListsProps) => {
 				const deleteListWithId = deleteList.bind(null, id);
 				return (
 					<AnimatedListItem key={id}>
-						<Item variant="outline" className="group relative">
+						<Item
+							variant="outline"
+							className={`group relative h-${ITEM_HEIGHT}`}
+						>
 							<Link href={`/${id}`} className="block w-full py-1.5">
 								<ItemContent>
 									<ItemTitle>{title}</ItemTitle>

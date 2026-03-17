@@ -1,12 +1,16 @@
-import { AnimatedList, AnimatedListItem } from "@/components/AnimatedList";
 import DeleteButton from "@/components/buttons/DeleteButton";
 import UpdateButton from "@/components/buttons/UpdateButton";
+import {
+	AnimatedList,
+	AnimatedListItem,
+} from "@/components/items/AnimatedList";
 import {
 	Item,
 	ItemActions,
 	ItemContent,
 	ItemTitle,
 } from "@/components/ui/item";
+import { ITEM_HEIGHT } from "@/constants/dimensions";
 import {
 	deleteListItem,
 	updateListItem,
@@ -25,7 +29,7 @@ const ListItems = ({ listItems }: ListItemsProps) => {
 				const deleteListItemWithId = deleteListItem.bind(null, id, title);
 				return (
 					<AnimatedListItem key={id}>
-						<Item variant="outline">
+						<Item variant="outline" className={`h-${ITEM_HEIGHT}`}>
 							<ItemContent>
 								<ItemTitle className="break-all">{title}</ItemTitle>
 							</ItemContent>

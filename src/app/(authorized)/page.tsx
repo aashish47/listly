@@ -1,7 +1,13 @@
-import { EmptyList } from "@/components/EmptyList";
-import FallbackList from "@/components/FallbackList";
+import FallbackSkeleton from "@/components/FallbackSkeleton";
 import Form from "@/components/Form";
-import Lists from "@/components/Lists";
+import { EmptyList } from "@/components/items/EmptyList";
+import Lists from "@/components/items/Lists";
+import Welcome from "@/components/Welcome";
+import {
+	HEADER_HEIGHT,
+	ICON_HEIGHT,
+	ITEM_HEIGHT,
+} from "@/constants/dimensions";
 import { addList } from "@/lib/actions/list-actions";
 import { fetchLists } from "@/lib/data/list-queries";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
@@ -10,20 +16,17 @@ import { Suspense } from "react";
 const Page = async () => {
 	return (
 		<>
-			<Suspense fallback={<FallbackList size={1} height={6} />}>
+			<Suspense fallback={<FallbackSkeleton size={1} height={HEADER_HEIGHT} />}>
 				<Welcome />
 			</Suspense>
-			<Form action={addList} buttonName="create" />
-			<Suspense fallback={<FallbackList size={4} height={12} />}>
+			<Suspense fallback={<FallbackSkeleton size={2} height={ICON_HEIGHT} />}>
+				<Form action={addList} buttonName="create" />
+			</Suspense>
+			<Suspense fallback={<FallbackSkeleton size={4} height={ITEM_HEIGHT} />}>
 				<ListsWrapper />
 			</Suspense>
 		</>
 	);
-};
-
-const Welcome = async () => {
-	const { user_metadata, email } = await getSessionUser();
-	return <h1>Welcome, {user_metadata.display_name ?? email}</h1>;
 };
 
 const ListsWrapper = async () => {

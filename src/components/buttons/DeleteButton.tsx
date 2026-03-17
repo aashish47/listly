@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { ActionPromise } from "@/types/actions";
 import { format } from "date-fns";
 import { Trash2Icon } from "lucide-react";
 import { useTransition } from "react";
@@ -21,11 +22,7 @@ import { toast } from "sonner";
 
 interface DeleteButtonProps {
 	title: string;
-	deleteAction: () => Promise<{
-		success: boolean;
-		message: string;
-		date: number;
-	}>;
+	deleteAction: () => ActionPromise;
 }
 
 export default function DeleteButton({
