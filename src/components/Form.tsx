@@ -1,10 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
 import { ActionPromise } from "@/types/actions";
 import { format } from "date-fns";
-import React, { useState, useTransition } from "react";
+import React, { useTransition } from "react";
 import { toast } from "sonner";
 
 interface FormProps {
@@ -12,47 +12,19 @@ interface FormProps {
 	buttonName: "create" | "add";
 }
 
-const listPlaceholders = [
-	"World Domination Plans",
-	"Things I'll Probably Forget",
-	"Midnight Epiphanies",
-	"Top Secret Intel",
-	"The 'Maybe Someday' List",
-	"Grocery Shenanigans",
-	"Master Quest Log",
-	"Brain Dump #42",
-];
-
-const itemPlaceholders = [
-	"Buy a tiny hat for the cat",
-	"Plot world domination (slowly)",
-	"Remember where I hid the snacks",
-	"Become a sourdough wizard",
-	"Manifesting a pizza right now",
-	"Don't forget the 'emergency' chocolate",
-	"Investigate that weird noise",
-	"Find the matching sock",
-	"Finally finish that one thing...",
-	"Draft a letter to my future self",
-];
-
 const Form: React.FC<FormProps> = ({ action, buttonName }) => {
 	const [isPending, startTransition] = useTransition();
 
-	const [text, setText] = useState(
-		buttonName === "create" ? "New List Name..." : "Add something...",
-	);
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+		if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+			e.preventDefault();
+			e.currentTarget.form?.requestSubmit();
+		}
+	};
 
 	const handleAction = (formData: FormData) => {
 		startTransition(async () => {
 			const result = await action(formData);
-
-			const source =
-				buttonName === "create" ? listPlaceholders : itemPlaceholders;
-			const random = source[Math.floor(Math.random() * source.length)];
-
-			setText(random);
-
 			const toastType = result.success ? "success" : "error";
 			toast[toastType](result.message, {
 				description: format(result.date, "PPPPpp"),
@@ -62,7 +34,11 @@ const Form: React.FC<FormProps> = ({ action, buttonName }) => {
 
 	return (
 		<form action={handleAction} className="flex flex-col gap-2">
-			<Input required placeholder={text} type="text" name="title" />
+			<Textarea
+				placeholder="Press Cmd+Enter to save"
+				name="titles"
+				onKeyDown={handleKeyDown}
+			/>
 			<Button type="submit" className="w-full" disabled={isPending}>
 				{isPending ? (
 					<>

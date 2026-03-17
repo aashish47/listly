@@ -1,75 +1,41 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getSessionUser } from "@/lib/supabase/auth-utils";
+import { safeAction } from "@/lib/server-utils";
+import { parseMultilineInput } from "@/lib/utils";
 import { updateTag } from "next/cache";
 
 export const addList = async (formData: FormData) => {
-	const user = await getSessionUser();
-	try {
-		const title = (formData.get("title") as string).trim();
-		await prisma.list.create({
-			data: { title, userId: user.id },
+	return safeAction("ADD_LIST", async (user) => {
+		const titles = parseMultilineInput(formData.get("titles") as string);
+		if (titles.length === 0) throw new Error("No titles provided");
+
+		await prisma.list.createMany({
+			data: titles.map((title) => ({ title, userId: user.id })),
 		});
+
 		updateTag("lists");
-		return {
-			success: true,
-			message: `List added successfully`,
-			date: Date.now(),
-		};
-	} catch (err: any) {
-		console.error("ADD_LIST_ERROR:", err);
-		return {
-			success: false,
-			message: `Something went wrong. The item couldn't be added.`,
-			date: Date.now(),
-		};
-	}
+		return `${titles.length} list${titles.length > 1 ? "s" : ""} added successfully`;
+	});
 };
 
 export const deleteList = async (id: string) => {
-	const user = await getSessionUser();
-	try {
-		if (!id) {
-			throw new Error("id invalid");
-		}
+	return safeAction("DELETE_LIST", async (user) => {
+		if (!id) throw new Error("ID is invalid");
 		await prisma.list.delete({ where: { id, userId: user.id } });
 		updateTag("lists");
-		return {
-			success: true,
-			message: "List deleted successfully",
-			date: Date.now(),
-		};
-	} catch (err) {
-		console.error("DELETE_LIST_ERROR:", err);
-		return {
-			success: false,
-			message: "Something went wrong. The item couldn't be deleted.",
-			date: Date.now(),
-		};
-	}
+		return "List deleted successfully";
+	});
 };
 
 export const updateList = async (id: string, formData: FormData) => {
-	const user = await getSessionUser();
-	try {
+	return safeAction("UPDATE_LIST", async (user) => {
 		const title = formData.get("title") as string;
 		await prisma.list.update({
 			where: { id, userId: user.id },
 			data: { title },
 		});
 		updateTag("lists");
-		return {
-			success: true,
-			message: "List updated successfully",
-			date: Date.now(),
-		};
-	} catch (err) {
-		console.error("UPDATE_LIST_ERROR:", err);
-		return {
-			success: false,
-			message: "Something went wrong. The item couldn't be updated.",
-			date: Date.now(),
-		};
-	}
+		return "List updated successfully";
+	});
 };

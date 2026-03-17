@@ -1,60 +1,37 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getSessionUser } from "@/lib/supabase/auth-utils";
+import { safeAction } from "@/lib/server-utils";
+import { parseMultilineInput } from "@/lib/utils";
 import { updateTag } from "next/cache";
 
 export const addListItem = async (listId: string, formData: FormData) => {
-	const user = await getSessionUser();
+	return safeAction("ADD_LIST_ITEM", async () => {
+		const titles = parseMultilineInput(formData.get("titles") as string);
+		if (titles.length === 0) throw new Error("No items provided");
 
-	try {
-		const title = (formData.get("title") as string).trim();
-		await prisma.listItem.create({
-			data: { title, listId },
+		await prisma.listItem.createMany({
+			data: titles.map((title) => ({ title, listId })),
 		});
 
 		updateTag(`list-${listId}`);
-		updateTag(`list-${listId}-${title.charAt(0)}`);
+		titles.forEach((t) => updateTag(`list-${listId}-${t.charAt(0)}`));
 
-		return {
-			success: true,
-			message: `Item added successfully`,
-			date: Date.now(),
-		};
-	} catch (err: any) {
-		console.error("ADD_LIST_ITEM_ERROR:", err);
-		return {
-			success: false,
-			message: `Something went wrong. The item couldn't be added.`,
-			date: Date.now(),
-		};
-	}
+		return `${titles.length} item${titles.length > 1 ? "s" : ""} added successfully`;
+	});
 };
 
 export const deleteListItem = async (id: string, prevTitle: string) => {
-	const user = await getSessionUser();
-
-	try {
-		if (!id) {
-			throw new Error("id invalid");
-		}
+	return safeAction("DELETE_LIST_ITEM", async () => {
+		if (!id) throw new Error("ID invalid");
 		const { listId, title } = await prisma.listItem.delete({ where: { id } });
+
 		updateTag(`list-${listId}`);
 		updateTag(`list-${listId}-${title.charAt(0)}`);
 		updateTag(`list-${listId}-${prevTitle.charAt(0)}`);
-		return {
-			success: true,
-			message: `Item deleted successfully`,
-			date: Date.now(),
-		};
-	} catch (err) {
-		console.error("DELETE_LIST_ITEM_ERROR:", err);
-		return {
-			success: false,
-			message: `Something went wrong. The item couldn't be deleted.`,
-			date: Date.now(),
-		};
-	}
+
+		return "Item deleted successfully";
+	});
 };
 
 export const updateListItem = async (
@@ -62,8 +39,7 @@ export const updateListItem = async (
 	prevTitle: string,
 	formData: FormData,
 ) => {
-	const user = await getSessionUser();
-	try {
+	return safeAction("UPDATE_LIST_ITEM", async () => {
 		const title = formData.get("title") as string;
 		const { listId } = await prisma.listItem.update({
 			where: { id },
@@ -74,17 +50,6 @@ export const updateListItem = async (
 		updateTag(`list-${listId}-${title.charAt(0)}`);
 		updateTag(`list-${listId}-${prevTitle.charAt(0)}`);
 
-		return {
-			success: true,
-			message: `Item updated successfully`,
-			date: Date.now(),
-		};
-	} catch (err) {
-		console.error("UPDATE_LIST_ITEM_ERROR:", err);
-		return {
-			success: false,
-			message: `Something went wrong. The item couldn't be updated.`,
-			date: Date.now(),
-		};
-	}
+		return "Item updated successfully";
+	});
 };
