@@ -81,7 +81,7 @@ const UpdateButton = ({ title, updateAction }: UpdateButtonProps) => {
 						{isPending ? (
 							<>
 								<Spinner data-icon="inline-start" />
-								Updating...
+								Saving...
 							</>
 						) : (
 							<>Save changes</>

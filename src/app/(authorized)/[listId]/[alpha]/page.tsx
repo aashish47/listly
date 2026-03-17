@@ -1,9 +1,9 @@
 import { EmptyList } from "@/components/EmptyList";
 import FallbackList from "@/components/FallbackList";
 import ListItems from "@/components/ListItems";
+import alphabets from "@/constants/alphabets";
 import { fetchListItemsByAlpha } from "@/lib/data/list-item-queries";
 import { prisma } from "@/lib/prisma";
-import alphabets from "@/utils/alphabets";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -41,9 +41,13 @@ const ListItemsWrapper = async ({
 	}>;
 }) => {
 	const { listId, alpha } = await params;
-	if (!RegExp(/^[a-zA-Z]$/).test(alpha)) {
+
+	const charCode = alpha.toLowerCase().charCodeAt(0);
+	const isLetter = alpha.length === 1 && charCode >= 97 && charCode <= 122;
+	if (!isLetter) {
 		notFound();
 	}
+
 	const listItems = await fetchListItemsByAlpha(listId, alpha);
 	return listItems.length > 0 ? (
 		<ListItems listItems={listItems} />
