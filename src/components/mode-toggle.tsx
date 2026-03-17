@@ -10,16 +10,38 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function ModeToggle() {
-	const { setTheme } = useTheme();
+	const { theme, setTheme } = useTheme();
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="outline" size="icon">
-					<Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-					<Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+					<AnimatePresence mode="wait" initial={false}>
+						{theme === "light" ? (
+							<motion.div
+								key="sun"
+								initial={{ scale: 0, rotate: -90 }}
+								animate={{ scale: 1, rotate: 0 }}
+								exit={{ scale: 0, rotate: 90 }}
+								transition={{ duration: 0.2 }}
+							>
+								<Sun className="h-[1.2rem] w-[1.2rem]" />
+							</motion.div>
+						) : (
+							<motion.div
+								key="moon"
+								initial={{ scale: 0, rotate: 90 }}
+								animate={{ scale: 1, rotate: 0 }}
+								exit={{ scale: 0, rotate: -90 }}
+								transition={{ duration: 0.2 }}
+							>
+								<Moon className="h-[1.2rem] w-[1.2rem]" />
+							</motion.div>
+						)}
+					</AnimatePresence>
 					<span className="sr-only">Toggle theme</span>
 				</Button>
 			</DropdownMenuTrigger>

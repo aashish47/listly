@@ -30,7 +30,7 @@ export default function RootLayout({
 					attribute="class"
 					defaultTheme="system"
 					enableSystem
-					// disableTransitionOnChange
+					disableTransitionOnChange
 				>
 					<div className="flex min-h-screen justify-center">
 						<div className="flex w-full max-w-3xl flex-col gap-6 p-2">

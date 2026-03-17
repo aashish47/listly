@@ -13,8 +13,8 @@ export const fetchLists = async (userId: string) => {
 			orderBy: { title: "asc" },
 		});
 	} catch (err) {
-		console.error("Database Error:", err);
-		throw new Error("Failed to load your lists. Please try again later.");
+		console.error("FETCH_LIST_ERROR:", err);
+		notFound();
 	}
 };
 
@@ -31,7 +31,7 @@ export const fetchListById = async (userId: string, id: string) => {
 		}
 		return list;
 	} catch (err) {
-		console.error("Database Error:", err);
-		throw new Error("Failed to load your lists. Please try again later.");
+		console.error("FETCH_LIST_ID:", err);
+		notFound();
 	}
 };

@@ -4,6 +4,7 @@ import ListItems from "@/components/ListItems";
 import { fetchListItemsByAlpha } from "@/lib/data/list-item-queries";
 import { prisma } from "@/lib/prisma";
 import alphabets from "@/utils/alphabets";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 export async function generateStaticParams() {
@@ -19,7 +20,7 @@ export async function generateStaticParams() {
 	});
 }
 
-const Home = async ({
+const Page = async ({
 	params,
 }: {
 	params: Promise<{ listId: string; alpha: string }>;
@@ -40,6 +41,9 @@ const ListItemsWrapper = async ({
 	}>;
 }) => {
 	const { listId, alpha } = await params;
+	if (!RegExp(/^[a-zA-Z]$/).test(alpha)) {
+		notFound();
+	}
 	const listItems = await fetchListItemsByAlpha(listId, alpha);
 	return listItems.length > 0 ? (
 		<ListItems listItems={listItems} />
@@ -48,4 +52,4 @@ const ListItemsWrapper = async ({
 	);
 };
 
-export default Home;
+export default Page;

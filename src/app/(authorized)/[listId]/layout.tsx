@@ -42,7 +42,7 @@ const ListButton = async ({
 	const user = await getSessionUser();
 	const { title } = await fetchListById(user.id, listId);
 	return (
-		<Button asChild variant="outline" className="h-12">
+		<Button asChild variant="secondary" className="h-12">
 			<Link href={`/${listId}`}>{title}</Link>
 		</Button>
 	);

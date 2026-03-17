@@ -1,6 +1,7 @@
 "use cache";
 import { prisma } from "@/lib/prisma";
 import { cacheLife, cacheTag } from "next/cache";
+import { notFound } from "next/navigation";
 
 export const fetchListItems = async (listId: string) => {
 	cacheLife("max");
@@ -12,8 +13,8 @@ export const fetchListItems = async (listId: string) => {
 			orderBy: { title: "asc" },
 		});
 	} catch (err) {
-		console.error("Database Error:", err);
-		throw new Error("Failed to load your lists. Please try again later.");
+		console.error("FETCH_LIST_ITEM_ERROR:", err);
+		notFound();
 	}
 };
 
@@ -27,6 +28,7 @@ export const fetchListItemsByAlpha = async (listId: string, alpha: string) => {
 			where: { listId, title: { startsWith: alpha.toLowerCase() } },
 		});
 	} catch (err) {
-		throw new Error(`Error fetching vocabulary ${err}`);
+		console.log("FETCH_LIST_ITEM_ALPHA_ERROR:", err);
+		notFound();
 	}
 };
