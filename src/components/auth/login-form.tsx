@@ -60,7 +60,12 @@ export function LoginForm({
 								<Button formAction={login} type="submit">
 									Login
 								</Button>
-								<Button formAction={googleOuth} variant="outline" type="submit">
+								<Button
+									formNoValidate
+									formAction={googleOuth}
+									variant="outline"
+									type="submit"
+								>
 									Login with Google
 								</Button>
 								<FieldDescription className="text-center">

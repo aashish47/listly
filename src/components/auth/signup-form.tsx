@@ -77,7 +77,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 								<Button formAction={signup} type="submit">
 									Create Account
 								</Button>
-								<Button formAction={googleOuth} variant="outline" type="submit">
+								<Button
+									formNoValidate
+									formAction={googleOuth}
+									variant="outline"
+									type="submit"
+								>
 									Sign up with Google
 								</Button>
 								<FieldDescription className="px-6 text-center">
