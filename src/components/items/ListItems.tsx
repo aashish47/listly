@@ -1,9 +1,7 @@
+"use client";
+
 import DeleteButton from "@/components/buttons/DeleteButton";
 import UpdateButton from "@/components/buttons/UpdateButton";
-import {
-	AnimatedList,
-	AnimatedListItem,
-} from "@/components/items/AnimatedList";
 import {
 	Item,
 	ItemActions,
@@ -16,6 +14,7 @@ import {
 	updateListItem,
 } from "@/lib/actions/list-item-actions";
 import { ListItem } from "@prisma/client";
+import { Virtuoso } from "react-virtuoso";
 
 interface ListItemsProps {
 	listItems: ListItem[];
@@ -23,31 +22,44 @@ interface ListItemsProps {
 
 const ListItems = ({ listItems }: ListItemsProps) => {
 	return (
-		<AnimatedList>
-			{listItems.map(({ id, title }) => {
-				const updateListItemWithId = updateListItem.bind(null, id, title);
-				const deleteListItemWithId = deleteListItem.bind(null, id, title);
-				return (
-					<AnimatedListItem key={id}>
-						<Item variant="outline" className={`h-${ITEM_HEIGHT}`}>
-							<ItemContent>
-								<ItemTitle className="break-all">{title}</ItemTitle>
-							</ItemContent>
-							<ItemActions>
-								<UpdateButton
-									title={title}
-									updateAction={updateListItemWithId}
-								/>
-								<DeleteButton
-									title={title}
-									deleteAction={deleteListItemWithId}
-								/>
-							</ItemActions>
-						</Item>
-					</AnimatedListItem>
-				);
-			})}
-		</AnimatedList>
+		<div className="grow">
+			<Virtuoso
+				className="no-scrollbar"
+				fixedItemHeight={64} // item height(56px) + padding-bottom(8px)
+				overscan={500}
+				totalCount={listItems.length}
+				data={listItems}
+				itemContent={(index, item) => {
+					const { id, title } = item;
+					const updateListItemWithId = updateListItem.bind(null, id, title);
+					const deleteListItemWithId = deleteListItem.bind(null, id, title);
+
+					return (
+						<div className="pb-2">
+							<Item
+								className="transform-gpu backface-hidden"
+								variant="outline"
+								style={{ height: `${ITEM_HEIGHT}px` }}
+							>
+								<ItemContent>
+									<ItemTitle className="break-all">{title}</ItemTitle>
+								</ItemContent>
+								<ItemActions>
+									<UpdateButton
+										title={title}
+										updateAction={updateListItemWithId}
+									/>
+									<DeleteButton
+										title={title}
+										deleteAction={deleteListItemWithId}
+									/>
+								</ItemActions>
+							</Item>
+						</div>
+					);
+				}}
+			/>
+		</div>
 	);
 };
 
