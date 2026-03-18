@@ -18,3 +18,7 @@ export const actionResponse = (success: boolean, message: string) => ({
 	message,
 	date: Date.now(),
 });
+
+export const delay = (ms: number) => {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+};

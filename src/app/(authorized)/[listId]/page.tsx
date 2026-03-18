@@ -8,7 +8,7 @@ import { Suspense } from "react";
 
 const Page = async ({ params }: { params: ListParamsPromise }) => {
 	return (
-		<Suspense fallback={<FallbackSkeleton size={4} height={ITEM_HEIGHT} />}>
+		<Suspense fallback={<FallbackSkeleton size={3} height={ITEM_HEIGHT} />}>
 			<ListItemsWrapper params={params} />
 		</Suspense>
 	);

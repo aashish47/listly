@@ -9,7 +9,11 @@ const FallbackSkeleton = ({ size, height }: FallbackSkeletonProps) => {
 	return (
 		<div className="flex flex-col gap-2">
 			{[...Array(size)].map((_, index) => (
-				<Skeleton className={`h-${height} w-full`} key={index} />
+				<Skeleton
+					className="w-full"
+					key={index}
+					style={{ height: `${height}px` }}
+				/>
 			))}
 		</div>
 	);

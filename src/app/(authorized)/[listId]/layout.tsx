@@ -2,7 +2,11 @@ import AlphabetButtons from "@/components/buttons/AlphabetButtons";
 import ListButton from "@/components/buttons/ListButton";
 import FallbackSkeleton from "@/components/FallbackSkeleton";
 import Form from "@/components/Form";
-import { HEADER_HEIGHT, ICON_HEIGHT } from "@/constants/dimensions";
+import {
+	HEADER_HEIGHT,
+	ICON_HEIGHT,
+	TEXTAREA_HEIGHT,
+} from "@/constants/dimensions";
 import { addListItem } from "@/lib/actions/list-item-actions";
 import { ListParamsPromise } from "@/types/params";
 
@@ -20,7 +24,14 @@ export default async function Layout({
 			<Suspense fallback={<FallbackSkeleton size={1} height={HEADER_HEIGHT} />}>
 				<ListButton params={params} />
 			</Suspense>
-			<Suspense fallback={<FallbackSkeleton size={2} height={ICON_HEIGHT} />}>
+			<Suspense
+				fallback={
+					<div className="flex flex-col gap-2">
+						<FallbackSkeleton size={1} height={TEXTAREA_HEIGHT} />
+						<FallbackSkeleton size={1} height={ICON_HEIGHT} />
+					</div>
+				}
+			>
 				<FormWrapper params={params} />
 			</Suspense>
 			<Suspense fallback={<FallbackSkeleton size={2} height={ICON_HEIGHT} />}>

@@ -1,3 +1,4 @@
-export const HEADER_HEIGHT = 12;
-export const ICON_HEIGHT = 8;
-export const ITEM_HEIGHT = 14;
+export const HEADER_HEIGHT = 48;
+export const ICON_HEIGHT = 32;
+export const ITEM_HEIGHT = 56;
+export const TEXTAREA_HEIGHT = 64;
