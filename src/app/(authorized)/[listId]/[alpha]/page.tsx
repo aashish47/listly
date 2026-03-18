@@ -5,6 +5,7 @@ import alphabets from "@/constants/alphabets";
 import { ITEM_HEIGHT } from "@/constants/dimensions";
 import { fetchListItemsByAlpha } from "@/lib/data/list-item-queries";
 import { prisma } from "@/lib/prisma";
+import { getSessionUser } from "@/lib/supabase/auth-utils";
 import { ListParamsPromise } from "@/types/params";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -37,8 +38,9 @@ const ListItemsWrapper = async ({ params }: { params: ListParamsPromise }) => {
 	if (!isLetter) {
 		notFound();
 	}
+	const { id } = await getSessionUser();
 
-	const listItems = await fetchListItemsByAlpha(listId, alpha);
+	const listItems = await fetchListItemsByAlpha(listId, alpha, id);
 	return listItems.length > 0 ? (
 		<ListItems listItems={listItems} />
 	) : (
