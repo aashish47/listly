@@ -1,7 +1,6 @@
-import FallbackSkeleton from "@/components/FallbackSkeleton";
 import { EmptyList } from "@/components/items/EmptyList";
 import ListItems from "@/components/items/ListItems";
-import { ITEM_HEIGHT } from "@/constants/dimensions";
+import ItemSkeleton from "@/components/skeletons/ItemSkeleton";
 import { fetchListItems } from "@/lib/data/list-item-queries";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
 import { ListParamsPromise } from "@/types/params";
@@ -9,7 +8,7 @@ import { Suspense } from "react";
 
 const Page = async ({ params }: { params: ListParamsPromise }) => {
 	return (
-		<Suspense fallback={<FallbackSkeleton size={3} height={ITEM_HEIGHT} />}>
+		<Suspense fallback={<ItemSkeleton />}>
 			<ListItemsWrapper params={params} />
 		</Suspense>
 	);

@@ -1,11 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface FallbackSkeletonProps {
+interface RectangleSkeletonProps {
 	size: number;
 	height: number;
 }
 
-const FallbackSkeleton = ({ size, height }: FallbackSkeletonProps) => {
+const RectangleSkeleton = ({ size, height }: RectangleSkeletonProps) => {
 	return (
 		<div className="flex flex-col gap-2">
 			{[...Array(size)].map((_, index) => (
@@ -19,4 +19,4 @@ const FallbackSkeleton = ({ size, height }: FallbackSkeletonProps) => {
 	);
 };
 
-export default FallbackSkeleton;
+export default RectangleSkeleton;

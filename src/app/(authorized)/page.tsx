@@ -1,14 +1,10 @@
-import FallbackSkeleton from "@/components/FallbackSkeleton";
 import Form from "@/components/Form";
 import { EmptyList } from "@/components/items/EmptyList";
 import Lists from "@/components/items/Lists";
+import FormSkeleton from "@/components/skeletons/FormSkeleton";
+import HeaderSkeleton from "@/components/skeletons/HeaderSkeleton";
+import ItemSkeleton from "@/components/skeletons/ItemSkeleton";
 import Welcome from "@/components/Welcome";
-import {
-	HEADER_HEIGHT,
-	ICON_HEIGHT,
-	ITEM_HEIGHT,
-	TEXTAREA_HEIGHT,
-} from "@/constants/dimensions";
 import { addList } from "@/lib/actions/list-actions";
 import { fetchLists } from "@/lib/data/list-queries";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
@@ -17,20 +13,13 @@ import { Suspense } from "react";
 const Page = async () => {
 	return (
 		<>
-			<Suspense fallback={<FallbackSkeleton size={1} height={HEADER_HEIGHT} />}>
+			<Suspense fallback={<HeaderSkeleton />}>
 				<Welcome />
 			</Suspense>
-			<Suspense
-				fallback={
-					<div className="flex flex-col gap-2">
-						<FallbackSkeleton size={1} height={TEXTAREA_HEIGHT} />
-						<FallbackSkeleton size={1} height={ICON_HEIGHT} />
-					</div>
-				}
-			>
+			<Suspense fallback={<FormSkeleton />}>
 				<Form action={addList} buttonName="create" />
 			</Suspense>
-			<Suspense fallback={<FallbackSkeleton size={4} height={ITEM_HEIGHT} />}>
+			<Suspense fallback={<ItemSkeleton />}>
 				<ListsWrapper />
 			</Suspense>
 		</>

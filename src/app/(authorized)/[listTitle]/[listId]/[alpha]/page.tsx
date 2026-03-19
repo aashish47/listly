@@ -1,8 +1,7 @@
-import FallbackSkeleton from "@/components/FallbackSkeleton";
 import { EmptyList } from "@/components/items/EmptyList";
 import ListItems from "@/components/items/ListItems";
+import ItemSkeleton from "@/components/skeletons/ItemSkeleton";
 import alphabets from "@/constants/alphabets";
-import { ITEM_HEIGHT } from "@/constants/dimensions";
 import { fetchListItemsByAlpha } from "@/lib/data/list-item-queries";
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
@@ -25,7 +24,7 @@ export async function generateStaticParams() {
 
 const Page = async ({ params }: { params: ListParamsPromise }) => {
 	return (
-		<Suspense fallback={<FallbackSkeleton size={3} height={ITEM_HEIGHT} />}>
+		<Suspense fallback={<ItemSkeleton />}>
 			<ListItemsWrapper params={params} />
 		</Suspense>
 	);
