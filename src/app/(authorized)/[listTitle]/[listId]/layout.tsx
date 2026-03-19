@@ -12,6 +12,17 @@ import { ListParamsPromise } from "@/types/params";
 
 import React, { Suspense } from "react";
 
+export async function generateMetadata({
+	params,
+}: {
+	params: ListParamsPromise;
+}) {
+	const { listTitle } = await params;
+	return {
+		title: decodeURIComponent(listTitle),
+	};
+}
+
 export default async function Layout({
 	params,
 	children,

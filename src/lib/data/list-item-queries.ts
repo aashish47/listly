@@ -36,7 +36,7 @@ export const fetchListItemsByAlpha = async (
 			orderBy: { title: "asc" },
 			where: {
 				listId,
-				title: { startsWith: alpha.toLowerCase() },
+				title: { startsWith: alpha, mode: "insensitive" },
 				list: { userId },
 			},
 		});

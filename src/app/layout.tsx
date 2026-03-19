@@ -10,7 +10,10 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "Vocabulary",
+	title: {
+		template: "%s | Listly",
+		default: "Listly",
+	},
 };
 
 export default function RootLayout({

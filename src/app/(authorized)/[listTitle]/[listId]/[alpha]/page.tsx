@@ -25,7 +25,7 @@ export async function generateStaticParams() {
 
 const Page = async ({ params }: { params: ListParamsPromise }) => {
 	return (
-		<Suspense fallback={<FallbackSkeleton size={4} height={ITEM_HEIGHT} />}>
+		<Suspense fallback={<FallbackSkeleton size={3} height={ITEM_HEIGHT} />}>
 			<ListItemsWrapper params={params} />
 		</Suspense>
 	);
@@ -33,14 +33,15 @@ const Page = async ({ params }: { params: ListParamsPromise }) => {
 
 const ListItemsWrapper = async ({ params }: { params: ListParamsPromise }) => {
 	const { listId, alpha = "" } = await params;
-	const charCode = alpha.toLowerCase().charCodeAt(0);
+	const alphaLowerCase = alpha.charAt(0).toLowerCase();
+	const charCode = alphaLowerCase.charCodeAt(0);
 	const isLetter = alpha.length === 1 && charCode >= 97 && charCode <= 122;
 	if (!isLetter) {
 		notFound();
 	}
 	const { id } = await getSessionUser();
 
-	const listItems = await fetchListItemsByAlpha(listId, alpha, id);
+	const listItems = await fetchListItemsByAlpha(listId, alphaLowerCase, id);
 	return listItems.length > 0 ? (
 		<ListItems listItems={listItems} />
 	) : (

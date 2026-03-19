@@ -39,7 +39,7 @@ const Lists = ({ lists }: ListsProps) => {
 								className="group relative transform-gpu backface-hidden"
 								style={{ height: `${ITEM_HEIGHT}px` }}
 							>
-								<Link href={`/${id}`} className="block w-full py-1.5">
+								<Link href={`/${title}/${id}`} className="block w-full py-1.5">
 									<ItemContent>
 										<ItemTitle>{title}</ItemTitle>
 									</ItemContent>

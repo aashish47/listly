@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 
 const AlphabetButtons = () => {
-	const { listId, alpha } = useParams<ListParams>();
+	const { listTitle, listId, alpha } = useParams<ListParams>();
 	const activeAlpha = alpha?.toLowerCase();
 
 	return (
@@ -19,7 +19,7 @@ const AlphabetButtons = () => {
 					size="icon"
 					className="capitalize"
 				>
-					<Link href={`/${listId}/${char}`}>{char}</Link>
+					<Link href={`/${listTitle}/${listId}/${char}`}>{char}</Link>
 				</Button>
 			))}
 		</div>
