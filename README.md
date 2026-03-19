@@ -1,37 +1,33 @@
+# Listly
 
-# Vocabulary
+A simple list-making application that allows users to create, manage, and toggle between multiple custom lists.
 
-Build vocabulary by adding new words you come across every day.
-
-![vocab47 vercel app_s (1)](https://github.com/user-attachments/assets/b285abfb-688f-4adc-9b1d-2623aeebd864)
-
+<img width="2560" height="1280" alt="listly47 vercel app_vocabulary_cmmvxnb2d00001c4idy6l0450" src="https://github.com/user-attachments/assets/c3154108-5f5f-4f21-8c18-5afe010562be" />
 
 ## Installation
-
 
 ### Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
-- **Node.js**: Version 20.11.1 (Download and install [Node.js](https://nodejs.org/) if you haven't already)
+- **Node.js**: v24.10.0 (Download and install [Node.js](https://nodejs.org/) if you haven't already)
 
 ### Clone the repository
 
 ```bash
-git clone https://github.com/aashish47/vocabulary.git
+git clone https://github.com/aashish47/listly.git
 ```
 
 ### Setting up Supabase and Google Auth
 
 Before running the project, you'll need to set up Supabase for database management and Google Auth for user authentication. Follow these steps to configure Supabase and obtain the necessary keys:
 
-1. **Set up Supabase Project and Google Auth**: 
+1. **Set up Supabase Project and Google Auth**:
    - Create a Supabase project and enable Google Auth.
    - Obtain the Supabase project URL, API key, Google Client ID, and Client Secret.
    - Add `http://localhost:3000` as an allowed redirect URL in Supabase Auth settings. (authentication -> url configuration -> site url)
 
    For detailed instructions, refer to the [Supabase Authentication Guide](https://supabase.com/docs/guides/auth/auth-deep-dive/auth-google-oauth).
-
 
 ### Rename `.env.example` and `.env.local.example` files
 
@@ -44,25 +40,27 @@ Once you have obtained the necessary keys and configured Supabase and Google Aut
 ### Install dependencies
 
 ```bash
-cd vocabulary
-npm install
+cd listly
+pnpm install
 
 ```
+
 ### Generate prisma client
 
 ```bash
-cd vocabulary
-npx prisma generate
+cd listly
+pnpx prisma generate
 
 ```
 
 ### Run the application
 
 ```bash
-cd vocabulary
-npm run dev
+cd listly
+pnpm run dev
 
 ```
+
 Open `http://localhost:3000` with your browser to see the result.
 
 ## Contribution
