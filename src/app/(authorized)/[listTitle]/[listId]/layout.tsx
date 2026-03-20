@@ -5,6 +5,8 @@ import AlphabetsSkeleton from "@/components/skeletons/AlphabetsSkeleton";
 import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import HeaderSkeleton from "@/components/skeletons/HeaderSkeleton";
 import { addListItem } from "@/lib/actions/list-item-actions";
+import { fetchListById } from "@/lib/data/list-queries";
+import { getSessionUser } from "@/lib/supabase/auth-utils";
 import { ListParamsPromise } from "@/types/params";
 
 import React, { Suspense } from "react";
@@ -14,9 +16,11 @@ export async function generateMetadata({
 }: {
 	params: ListParamsPromise;
 }) {
-	const { listTitle } = await params;
+	const { listId } = await params;
+	const user = await getSessionUser();
+	const { title } = await fetchListById(user.id, listId);
 	return {
-		title: decodeURIComponent(listTitle),
+		title,
 	};
 }
 
@@ -30,7 +34,7 @@ export default async function Layout({
 	return (
 		<>
 			<Suspense fallback={<HeaderSkeleton />}>
-				<ListButton params={params} />
+				<ButtonWrapper params={params} />
 			</Suspense>
 			<Suspense fallback={<FormSkeleton />}>
 				<FormWrapper params={params} />
@@ -43,6 +47,14 @@ export default async function Layout({
 		</>
 	);
 }
+
+const ButtonWrapper = async ({ params }: { params: ListParamsPromise }) => {
+	const user = await getSessionUser();
+	const { listId } = await params;
+	const { title } = await fetchListById(user.id, listId);
+
+	return <ListButton title={title} listId={listId} />;
+};
 
 const FormWrapper = async ({ params }: { params: ListParamsPromise }) => {
 	const { listId } = await params;

@@ -1,19 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { ListParamsPromise } from "@/types/params";
+import { slugify } from "@/lib/utils";
 import Link from "next/link";
 
 interface ListButtonProps {
-	params: ListParamsPromise;
+	listId: string;
+	title: string;
 }
 
-const ListButton = async ({ params }: ListButtonProps) => {
-	const { listTitle, listId } = await params;
-
+const ListButton = async ({ listId, title }: ListButtonProps) => {
 	return (
 		<Button asChild variant="secondary" className="h-12">
-			<Link href={`/${listTitle}/${listId}`}>
-				{decodeURIComponent(listTitle)}
-			</Link>
+			<Link href={`/${slugify(title)}/${listId}`}>{title}</Link>
 		</Button>
 	);
 };

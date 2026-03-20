@@ -2,46 +2,46 @@
 import { prisma } from "@/lib/prisma";
 import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
-export const fetchListItems = async (listId: string, userId: string) => {
+export const fetchListItems = cache(async (listId: string, userId: string) => {
 	cacheLife("max");
 	cacheTag(`list-${listId}`);
 
-	try {
-		return await prisma.listItem.findMany({
-			where: {
-				listId,
-				list: {
-					userId,
-				},
+	const listItems = await prisma.listItem.findMany({
+		where: {
+			listId,
+			list: {
+				userId,
 			},
-			orderBy: { title: "asc" },
-		});
-	} catch (err) {
-		console.error("FETCH_LIST_ITEM_ERROR:", err);
+		},
+		orderBy: { title: "asc" },
+	});
+
+	if (!listItems) {
 		notFound();
 	}
-};
 
-export const fetchListItemsByAlpha = async (
-	listId: string,
-	alpha: string,
-	userId: string,
-) => {
-	cacheLife("max");
-	cacheTag(`list-${listId}-${alpha}`);
+	return listItems;
+});
 
-	try {
-		return await prisma.listItem.findMany({
-			orderBy: { title: "asc" },
+export const fetchListItemsByAlpha = cache(
+	async (listId: string, alpha: string, userId: string) => {
+		cacheLife("max");
+		cacheTag(`list-${listId}-${alpha}`);
+
+		const listItems = await prisma.listItem.findMany({
 			where: {
 				listId,
 				title: { startsWith: alpha, mode: "insensitive" },
 				list: { userId },
 			},
+			orderBy: { title: "asc" },
 		});
-	} catch (err) {
-		console.log("FETCH_LIST_ITEM_ALPHA_ERROR:", err);
-		notFound();
-	}
-};
+
+		if (!listItems) {
+			notFound();
+		}
+		return listItems;
+	},
+);
