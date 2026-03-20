@@ -6,31 +6,80 @@ import { parseMultilineInput } from "@/lib/utils";
 import { updateTag } from "next/cache";
 
 export const addListItem = async (listId: string, formData: FormData) => {
-	return safeAction("ADD_LIST_ITEM", async () => {
+	return safeAction("ADD_LIST_ITEM", async (user) => {
+		const list = await prisma.list.findFirst({
+			where: { id: listId, userId: user.id },
+		});
+		if (!list) throw new Error("List does not exist");
+
 		const titles = parseMultilineInput(formData.get("titles") as string);
 		if (titles.length === 0) throw new Error("No items provided");
 
+		const data = titles.map((title) => ({ title, listId }));
+
 		await prisma.listItem.createMany({
-			data: titles.map((title) => ({ title, listId })),
+			data,
 		});
 
 		updateTag(`list-${listId}`);
-		titles.forEach((t) => updateTag(`list-${listId}-${t.charAt(0)}`));
+		titles.forEach((t) =>
+			updateTag(`list-${listId}-${t.charAt(0).toLowerCase()}`),
+		);
 
 		return `${titles.length} item${titles.length > 1 ? "s" : ""} added successfully`;
 	});
 };
 
-export const deleteListItem = async (id: string, prevTitle: string) => {
-	return safeAction("DELETE_LIST_ITEM", async () => {
+export const deleteListItem = async (id: string) => {
+	return safeAction("DELETE_LIST_ITEM", async (user) => {
 		if (!id) throw new Error("ID invalid");
-		const { listId, title } = await prisma.listItem.delete({ where: { id } });
+		const { listId, title } = await prisma.listItem.delete({
+			where: {
+				id,
+				list: {
+					userId: user.id,
+				},
+			},
+		});
 
 		updateTag(`list-${listId}`);
-		updateTag(`list-${listId}-${title.charAt(0)}`);
-		updateTag(`list-${listId}-${prevTitle.charAt(0)}`);
+		updateTag(`list-${listId}-${title.charAt(0).toLowerCase()}`);
 
 		return "Item deleted successfully";
+	});
+};
+
+export const deleteManyListItems = async (ids: string[]) => {
+	return safeAction("DELETE_MANY_LIST_ITEMS", async (user) => {
+		if (!ids || ids.length === 0) throw new Error("No IDs provided");
+
+		const items = await prisma.listItem.findMany({
+			where: {
+				id: { in: ids },
+				list: {
+					userId: user.id,
+				},
+			},
+			select: { listId: true, title: true },
+		});
+
+		if (items.length === 0) throw new Error("No items found to delete");
+
+		const listId = items[0].listId;
+
+		const { count } = await prisma.listItem.deleteMany({
+			where: { id: { in: ids } },
+		});
+
+		updateTag(`list-${listId}`);
+		const uniqueChars = new Set(
+			items.map((item) => item.title.charAt(0).toLowerCase()),
+		);
+		uniqueChars.forEach((char) => {
+			updateTag(`list-${listId}-${char}`);
+		});
+
+		return `${count} item${count > 1 ? "s" : ""} deleted successfully`;
 	});
 };
 
@@ -39,16 +88,21 @@ export const updateListItem = async (
 	prevTitle: string,
 	formData: FormData,
 ) => {
-	return safeAction("UPDATE_LIST_ITEM", async () => {
+	return safeAction("UPDATE_LIST_ITEM", async (user) => {
 		const title = formData.get("title") as string;
 		const { listId } = await prisma.listItem.update({
-			where: { id },
+			where: {
+				id,
+				list: {
+					userId: user.id,
+				},
+			},
 			data: { title },
 		});
 
 		updateTag(`list-${listId}`);
-		updateTag(`list-${listId}-${title.charAt(0)}`);
-		updateTag(`list-${listId}-${prevTitle.charAt(0)}`);
+		updateTag(`list-${listId}-${title.charAt(0).toLowerCase()}`);
+		updateTag(`list-${listId}-${prevTitle.charAt(0).toLowerCase()}`);
 
 		return "Item updated successfully";
 	});

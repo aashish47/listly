@@ -1,6 +1,10 @@
 "use client";
 
 import {
+	SelectableItem,
+	UseListSelectionReturn,
+} from "@/components/hooks/useListSelection";
+import {
 	AlertDialog,
 	AlertDialogAction,
 	AlertDialogCancel,
@@ -20,16 +24,22 @@ import { Trash2Icon } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
-interface DeleteButtonProps {
-	title: string;
+interface DeleteButtonProps<T extends SelectableItem> {
+	title?: string;
 	deleteAction: () => ActionPromise;
+	disabled?: boolean;
+	listSelection: Pick<UseListSelectionReturn<T>, "resetSelection"> &
+		Partial<Pick<UseListSelectionReturn<T>, "selectedCount">>;
 }
 
-export default function DeleteButton({
+export default function DeleteButton<T extends SelectableItem>({
 	title,
 	deleteAction,
-}: DeleteButtonProps) {
+	disabled,
+	listSelection,
+}: DeleteButtonProps<T>) {
 	const [isPending, startTransition] = useTransition();
+	const { resetSelection, selectedCount } = listSelection;
 
 	const handleAction = () => {
 		startTransition(async () => {
@@ -38,6 +48,7 @@ export default function DeleteButton({
 			toast[toastType](result.message, {
 				description: format(result.date, "PPPPpp"),
 			});
+			if (toastType === "success") resetSelection();
 		});
 	};
 	return (
@@ -46,7 +57,7 @@ export default function DeleteButton({
 				<Button
 					variant="destructive"
 					size={isPending ? "default" : "icon"}
-					disabled={isPending}
+					disabled={isPending || disabled}
 				>
 					{isPending ? (
 						<>
@@ -64,7 +75,11 @@ export default function DeleteButton({
 						<Trash2Icon />
 					</AlertDialogMedia>
 					<AlertDialogTitle className="line-clamp-1 break-all">
-						Delete {title}?
+						Delete{" "}
+						{selectedCount && selectedCount > 1
+							? `${selectedCount} items`
+							: title}
+						?
 					</AlertDialogTitle>
 					<AlertDialogDescription>
 						This action is permanent and cannot be undone. All data associated
