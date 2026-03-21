@@ -1,25 +1,39 @@
 "use client";
+import {
+	SelectableItem,
+	UseListSelectionReturn,
+} from "@/components/hooks/useListSelection";
 import { Button } from "@/components/ui/button";
 import alphabets from "@/constants/alphabets";
-import { ListParams } from "@/types/params";
-import Link from "next/link";
-import { useParams } from "next/navigation";
 
-const AlphabetButtons = () => {
-	const { listTitle, listId, alpha } = useParams<ListParams>();
-	const activeAlpha = alpha?.toLowerCase();
+interface AlphabetButtonsProps<T extends SelectableItem> {
+	listSelection: Pick<
+		UseListSelectionReturn<T>,
+		"startsWithQuery" | "setStartsWithQuery"
+	>;
+}
+
+const AlphabetButtons = <T extends SelectableItem>({
+	listSelection,
+}: AlphabetButtonsProps<T>) => {
+	const { startsWithQuery, setStartsWithQuery } = listSelection;
+	const activeAlpha = startsWithQuery?.toLowerCase();
 
 	return (
 		<div className="flex flex-wrap justify-center gap-3">
 			{alphabets.map((char) => (
 				<Button
 					key={char}
-					asChild
 					variant={activeAlpha === char ? "default" : "outline"}
 					size="icon"
 					className="capitalize"
+					onClick={() =>
+						activeAlpha === char
+							? setStartsWithQuery("")
+							: setStartsWithQuery(char)
+					}
 				>
-					<Link href={`/${listTitle}/${listId}/${char}`}>{char}</Link>
+					{char}
 				</Button>
 			))}
 		</div>

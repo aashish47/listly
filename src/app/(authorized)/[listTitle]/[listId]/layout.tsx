@@ -1,9 +1,7 @@
-import AlphabetButtons from "@/components/buttons/AlphabetButtons";
-import ListButton from "@/components/buttons/ListButton";
 import Form from "@/components/Form";
-import AlphabetsSkeleton from "@/components/skeletons/AlphabetsSkeleton";
 import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import HeaderSkeleton from "@/components/skeletons/HeaderSkeleton";
+import { HEADER_HEIGHT } from "@/constants/dimensions";
 import { addListItem } from "@/lib/actions/list-item-actions";
 import { fetchListById } from "@/lib/data/list-queries";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
@@ -39,10 +37,6 @@ export default async function Layout({
 			<Suspense fallback={<FormSkeleton />}>
 				<FormWrapper params={params} />
 			</Suspense>
-			<Suspense fallback={<AlphabetsSkeleton />}>
-				<AlphabetButtons />
-			</Suspense>
-
 			{children}
 		</>
 	);
@@ -53,7 +47,14 @@ const ButtonWrapper = async ({ params }: { params: ListParamsPromise }) => {
 	const { listId } = await params;
 	const { title } = await fetchListById(user.id, listId);
 
-	return <ListButton title={title} listId={listId} />;
+	return (
+		<div
+			className="shrink-0 content-center text-center"
+			style={{ height: `${HEADER_HEIGHT}px` }}
+		>
+			{title}
+		</div>
+	);
 };
 
 const FormWrapper = async ({ params }: { params: ListParamsPromise }) => {

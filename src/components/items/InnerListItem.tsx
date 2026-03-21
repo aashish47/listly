@@ -34,7 +34,7 @@ const InnerListItem = <T extends SelectableItem>({
 	const { resetSelection, selectedIds, toggleSelect } = listSelection;
 	const isSelected = selectedIds.has(id);
 
-	const updateListItemWithId = updateListItem.bind(null, id, title);
+	const updateListItemWithId = updateListItem.bind(null, id);
 	const deleteListItemWithId = deleteListItem.bind(null, id);
 
 	return (

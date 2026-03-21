@@ -1,6 +1,5 @@
 "use server";
 
-import alphabets from "@/constants/alphabets";
 import { prisma } from "@/lib/prisma";
 import { safeAction } from "@/lib/server-utils";
 import { parseMultilineInput } from "@/lib/utils";
@@ -28,7 +27,6 @@ export const deleteList = async (id: string) => {
 		});
 		updateTag("lists");
 		updateTag(`list-${id}`);
-		alphabets.map((alpha) => updateTag(`list-${id}-${alpha}`));
 		return "List deleted successfully";
 	});
 };
@@ -50,7 +48,6 @@ export const deleteManyLists = async (ids: string[]) => {
 		updateTag("lists");
 		items.forEach(({ id }) => {
 			updateTag(`list-${id}`);
-			alphabets.forEach((alpha) => updateTag(`list-${id}-${alpha}`));
 		});
 
 		return `${count} item${count > 1 ? "s" : ""} deleted successfully`;

@@ -7,11 +7,13 @@ export interface SelectableItem {
 }
 export const enum ListUrlParams {
 	SEARCH = "search",
+	STARTSWITH = "startswith",
 }
 
 export function useListSelection<T extends SelectableItem>(
 	items: T[],
-	seachKey: ListUrlParams = ListUrlParams.SEARCH,
+	searchKey: ListUrlParams = ListUrlParams.SEARCH,
+	startsWithKey: ListUrlParams = ListUrlParams.STARTSWITH,
 ) {
 	const searchParams = useSearchParams();
 	const router = useRouter();
@@ -20,7 +22,10 @@ export function useListSelection<T extends SelectableItem>(
 	// 1. Initial state from URL
 	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 	const [searchQuery, setSearchQuery] = useState(
-		searchParams.get(seachKey) || "",
+		searchParams.get(searchKey) || "",
+	);
+	const [startsWithQuery, setStartsWithQuery] = useState(
+		searchParams.get(startsWithKey) || "",
 	);
 
 	// 2. URL Sync (Debounced)
@@ -29,25 +34,43 @@ export function useListSelection<T extends SelectableItem>(
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			const params = new URLSearchParams(searchParams);
-			const currentQuery = params.get(seachKey) || "";
-			if (currentQuery === searchQuery) return;
-			if (searchQuery) {
-				params.set(seachKey, searchQuery);
-			} else {
-				params.delete(seachKey);
-			}
+
+			const currentSearchQuery = params.get(searchKey) || "";
+			const currentStartsWithQuery = params.get(startsWithQuery) || "";
+
+			if (
+				currentSearchQuery === searchQuery &&
+				currentStartsWithQuery === startsWithKey
+			)
+				return;
+
+			// Sync Search
+			if (searchQuery) params.set(searchKey, searchQuery);
+			else params.delete(searchKey);
+
+			// Sync StartsWith
+			if (startsWithQuery) params.set(startsWithKey, startsWithQuery);
+			else params.delete(startsWithKey);
 
 			router.replace(`${pathname}?${params.toString()}`, { scroll: false });
 		}, 500);
 
 		return () => clearTimeout(timeoutId);
-	}, [searchQuery, pathname, router]);
+	}, [searchQuery, startsWithQuery, pathname, router]);
 
 	// 3. Memoized Filtering
 	const filteredItems = useMemo(() => {
-		const query = searchQuery.toLowerCase();
-		return items.filter((item) => item.title.toLowerCase().includes(query));
-	}, [items, searchQuery]);
+		const q = searchQuery.toLowerCase();
+		const a = startsWithQuery.toLowerCase();
+
+		return items.filter((item) => {
+			const title = item.title.toLowerCase();
+			const matchesSearch = title.includes(q);
+			const matchesAlpha = a ? title.startsWith(a) : true;
+
+			return matchesSearch && matchesAlpha;
+		});
+	}, [items, searchQuery, startsWithQuery]);
 
 	// 4. Selection Derived State (The "Ghost Buster")
 	const validSelectedIds = useMemo(() => {
@@ -103,6 +126,8 @@ export function useListSelection<T extends SelectableItem>(
 		filteredItems,
 		searchQuery,
 		setSearchQuery,
+		startsWithQuery,
+		setStartsWithQuery,
 		selectedIds: validSelectedIds,
 		// Stats
 		selectedCount: validSelectedIds.size, // Total selected in app

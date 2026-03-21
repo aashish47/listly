@@ -22,9 +22,6 @@ export const addListItem = async (listId: string, formData: FormData) => {
 		});
 
 		updateTag(`list-${listId}`);
-		titles.forEach((t) =>
-			updateTag(`list-${listId}-${t.charAt(0).toLowerCase()}`),
-		);
 
 		return `${titles.length} item${titles.length > 1 ? "s" : ""} added successfully`;
 	});
@@ -33,7 +30,7 @@ export const addListItem = async (listId: string, formData: FormData) => {
 export const deleteListItem = async (id: string) => {
 	return safeAction("DELETE_LIST_ITEM", async (user) => {
 		if (!id) throw new Error("ID invalid");
-		const { listId, title } = await prisma.listItem.delete({
+		const { listId } = await prisma.listItem.delete({
 			where: {
 				id,
 				list: {
@@ -43,7 +40,6 @@ export const deleteListItem = async (id: string) => {
 		});
 
 		updateTag(`list-${listId}`);
-		updateTag(`list-${listId}-${title.charAt(0).toLowerCase()}`);
 
 		return "Item deleted successfully";
 	});
@@ -72,22 +68,12 @@ export const deleteManyListItems = async (ids: string[]) => {
 		});
 
 		updateTag(`list-${listId}`);
-		const uniqueChars = new Set(
-			items.map((item) => item.title.charAt(0).toLowerCase()),
-		);
-		uniqueChars.forEach((char) => {
-			updateTag(`list-${listId}-${char}`);
-		});
 
 		return `${count} item${count > 1 ? "s" : ""} deleted successfully`;
 	});
 };
 
-export const updateListItem = async (
-	id: string,
-	prevTitle: string,
-	formData: FormData,
-) => {
+export const updateListItem = async (id: string, formData: FormData) => {
 	return safeAction("UPDATE_LIST_ITEM", async (user) => {
 		const title = formData.get("title") as string;
 		const { listId } = await prisma.listItem.update({
@@ -101,8 +87,6 @@ export const updateListItem = async (
 		});
 
 		updateTag(`list-${listId}`);
-		updateTag(`list-${listId}-${title.charAt(0).toLowerCase()}`);
-		updateTag(`list-${listId}-${prevTitle.charAt(0).toLowerCase()}`);
 
 		return "Item updated successfully";
 	});

@@ -1,5 +1,6 @@
 "use client";
 
+import AlphabetButtons from "@/components/buttons/AlphabetButtons";
 import { useListSelection } from "@/components/hooks/useListSelection";
 import InnerListItem from "@/components/items/InnerListItem";
 import Toolbar from "@/components/Toolbar";
@@ -17,37 +18,44 @@ const ListItems = ({ listItems }: ListItemsProps) => {
 		filteredItems,
 		resetSelection,
 		selectedIds,
+		startsWithQuery,
+		setStartsWithQuery,
 		toggleSelect,
 		totalFiltered,
 	} = listSelection;
 
 	return (
-		<div className="flex h-full grow flex-col gap-2">
-			<Toolbar
-				deleteAction={deleteManyListItems}
-				listSelection={listSelection}
+		<>
+			<AlphabetButtons
+				listSelection={{ startsWithQuery, setStartsWithQuery }}
 			/>
-
-			<div className="grow">
-				<Virtuoso
-					className="no-scrollbar"
-					fixedItemHeight={64} // item height(56px) + padding-bottom(8px)
-					overscan={500}
-					totalCount={totalFiltered}
-					data={filteredItems}
-					itemContent={(_index, item) => (
-						<InnerListItem
-							item={item}
-							listSelection={{
-								resetSelection,
-								selectedIds,
-								toggleSelect,
-							}}
-						/>
-					)}
+			<div className="flex h-full grow flex-col gap-2">
+				<Toolbar
+					deleteAction={deleteManyListItems}
+					listSelection={listSelection}
 				/>
+
+				<div className="grow">
+					<Virtuoso
+						className="no-scrollbar"
+						fixedItemHeight={64} // item height(56px) + padding-bottom(8px)
+						overscan={500}
+						totalCount={totalFiltered}
+						data={filteredItems}
+						itemContent={(_index, item) => (
+							<InnerListItem
+								item={item}
+								listSelection={{
+									resetSelection,
+									selectedIds,
+									toggleSelect,
+								}}
+							/>
+						)}
+					/>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

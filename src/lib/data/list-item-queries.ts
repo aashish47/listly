@@ -17,19 +17,3 @@ export const fetchListItems = cache(async (listId: string, userId: string) => {
 		orderBy: { title: "asc" },
 	});
 });
-
-export const fetchListItemsByAlpha = cache(
-	async (listId: string, alpha: string, userId: string) => {
-		cacheLife("max");
-		cacheTag(`list-${listId}-${alpha}`);
-
-		return await prisma.listItem.findMany({
-			where: {
-				listId,
-				title: { startsWith: alpha, mode: "insensitive" },
-				list: { userId },
-			},
-			orderBy: { title: "asc" },
-		});
-	},
-);
