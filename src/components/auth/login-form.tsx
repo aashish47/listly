@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button";
+import FormButton from "@/components/buttons/FormButton";
+import FormContent from "@/components/FormContent";
 import {
 	Card,
 	CardContent,
@@ -33,47 +34,51 @@ export function LoginForm({
 				</CardHeader>
 				<CardContent>
 					<form>
-						<FieldGroup>
-							<Field>
-								<FieldLabel htmlFor="email">Email</FieldLabel>
-								<Input
-									id="email"
-									name="email"
-									type="email"
-									placeholder="m@example.com"
-									required
-								/>
-							</Field>
-							<Field>
-								<div className="flex items-center">
-									<FieldLabel htmlFor="password">Password</FieldLabel>
-									<Link
-										href="#"
-										className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-									>
-										Forgot your password?
-									</Link>
-								</div>
-								<Input id="password" name="password" type="password" required />
-							</Field>
-							<Field>
-								<Button formAction={login} type="submit">
-									Login
-								</Button>
-								<Button
-									formNoValidate
-									formAction={googleOuth}
-									variant="outline"
-									type="submit"
-								>
-									Login with Google
-								</Button>
-								<FieldDescription className="text-center">
-									Don&apos;t have an account?{" "}
-									<Link href="/signup">Sign up</Link>
-								</FieldDescription>
-							</Field>
-						</FieldGroup>
+						<FormContent>
+							<FieldGroup>
+								<Field>
+									<FieldLabel htmlFor="email">Email</FieldLabel>
+									<Input
+										id="email"
+										name="email"
+										type="email"
+										placeholder="m@example.com"
+										required
+									/>
+								</Field>
+								<Field>
+									<div className="flex items-center">
+										<FieldLabel htmlFor="password">Password</FieldLabel>
+										<Link
+											href="#"
+											className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+										>
+											Forgot your password?
+										</Link>
+									</div>
+									<Input
+										id="password"
+										name="password"
+										type="password"
+										required
+									/>
+								</Field>
+								<Field>
+									<FormButton formAction={login} buttonName="login" />
+									<FormButton
+										formNoValidate
+										variant="outline"
+										formAction={googleOuth}
+										buttonName="login"
+										oAuth="google"
+									/>
+									<FieldDescription className="text-center">
+										Don&apos;t have an account?{" "}
+										<Link href="/signup">Sign up</Link>
+									</FieldDescription>
+								</Field>
+							</FieldGroup>
+						</FormContent>
 					</form>
 				</CardContent>
 			</Card>

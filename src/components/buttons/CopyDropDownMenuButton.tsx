@@ -10,13 +10,13 @@ import { format } from "date-fns";
 import { ChevronDown, Copy, FileJson, Type } from "lucide-react";
 import { toast } from "sonner";
 
-interface CopyDropDownMenuProps<T extends SelectableItem> {
+interface CopyDropDownMenuButtonProps<T extends SelectableItem> {
 	items: T[];
 }
 
-const CopyDropDownMenu = <T extends SelectableItem>({
+const CopyDropDownMenuButton = <T extends SelectableItem>({
 	items,
-}: CopyDropDownMenuProps<T>) => {
+}: CopyDropDownMenuButtonProps<T>) => {
 	const copyFullObject = () => {
 		navigator.clipboard.writeText(JSON.stringify(items, null, 2));
 		toast.success(`${items.length} items copied as JSON`, {
@@ -53,4 +53,4 @@ const CopyDropDownMenu = <T extends SelectableItem>({
 	);
 };
 
-export default CopyDropDownMenu;
+export default CopyDropDownMenuButton;

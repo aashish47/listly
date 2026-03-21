@@ -8,16 +8,10 @@ export const fetchLists = cache(async (userId: string) => {
 	cacheLife("max");
 	cacheTag("lists");
 
-	const lists = await prisma.list.findMany({
+	return await prisma.list.findMany({
 		where: { userId },
 		orderBy: { title: "asc" },
 	});
-
-	if (!lists) {
-		notFound();
-	}
-
-	return lists;
 });
 
 export const fetchListById = cache(async (userId: string, id: string) => {
