@@ -22,7 +22,7 @@ interface InnerListItemProps<T extends SelectableItem> {
 	item: ListItem;
 	listSelection: Pick<
 		UseListSelectionReturn<T>,
-		"resetSelection" | "selectedCount" | "selectedIds" | "toggleSelect"
+		"resetSelection" | "selectedIds" | "toggleSelect"
 	>;
 }
 
@@ -31,8 +31,7 @@ const InnerListItem = <T extends SelectableItem>({
 	listSelection,
 }: InnerListItemProps<T>) => {
 	const { id, title } = item;
-	const { resetSelection, selectedCount, selectedIds, toggleSelect } =
-		listSelection;
+	const { resetSelection, selectedIds, toggleSelect } = listSelection;
 	const isSelected = selectedIds.has(id);
 
 	const updateListItemWithId = updateListItem.bind(null, id, title);

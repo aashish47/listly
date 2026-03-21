@@ -16,7 +16,6 @@ const ListItems = ({ listItems }: ListItemsProps) => {
 	const {
 		filteredItems,
 		resetSelection,
-		selectedCount,
 		selectedIds,
 		toggleSelect,
 		totalFiltered,
@@ -41,7 +40,6 @@ const ListItems = ({ listItems }: ListItemsProps) => {
 							item={item}
 							listSelection={{
 								resetSelection,
-								selectedCount,
 								selectedIds,
 								toggleSelect,
 							}}

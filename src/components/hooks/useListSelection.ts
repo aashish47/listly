@@ -1,21 +1,55 @@
-import { useCallback, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export interface SelectableItem {
 	id: string;
 	title: string;
 }
+export const enum ListUrlParams {
+	SEARCH = "search",
+}
 
-export function useListSelection<T extends SelectableItem>(items: T[]) {
+export function useListSelection<T extends SelectableItem>(
+	items: T[],
+	seachKey: ListUrlParams = ListUrlParams.SEARCH,
+) {
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const pathname = usePathname();
+
+	// 1. Initial state from URL
 	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-	const [searchQuery, setSearchQuery] = useState("");
+	const [searchQuery, setSearchQuery] = useState(
+		searchParams.get(seachKey) || "",
+	);
 
-	// 1. Memoized Filtering
+	// 2. URL Sync (Debounced)
+	// This keeps the URL updated in the background without slowing down the typing
+
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			const params = new URLSearchParams(searchParams);
+			const currentQuery = params.get(seachKey) || "";
+			if (currentQuery === searchQuery) return;
+			if (searchQuery) {
+				params.set(seachKey, searchQuery);
+			} else {
+				params.delete(seachKey);
+			}
+
+			router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+		}, 500);
+
+		return () => clearTimeout(timeoutId);
+	}, [searchQuery, pathname, router]);
+
+	// 3. Memoized Filtering
 	const filteredItems = useMemo(() => {
 		const query = searchQuery.toLowerCase();
 		return items.filter((item) => item.title.toLowerCase().includes(query));
 	}, [items, searchQuery]);
 
-	// 2. Selection Derived State (The "Ghost Buster")
+	// 4. Selection Derived State (The "Ghost Buster")
 	const validSelectedIds = useMemo(() => {
 		const valid = new Set<string>();
 		// Only keep IDs that actually exist in the current items list
@@ -27,7 +61,7 @@ export function useListSelection<T extends SelectableItem>(items: T[]) {
 		return valid;
 	}, [items, selectedIds]);
 
-	// 3. Selection Derived State (scoped to filter)
+	// 5. Selection Derived State (scoped to filter)
 	const totalFiltered = filteredItems.length;
 	const selectedInFilter = filteredItems.filter((item) =>
 		validSelectedIds.has(item.id),
@@ -36,7 +70,7 @@ export function useListSelection<T extends SelectableItem>(items: T[]) {
 	const isAllSelected = totalFiltered > 0 && selectedInFilter === totalFiltered;
 	const isPartialSelected = selectedInFilter > 0 && !isAllSelected;
 
-	// 4. Selection Handlers
+	// 6. Selection Handlers
 	const toggleSelect = useCallback((id: string) => {
 		setSelectedIds((prev) => {
 			const next = new Set(prev);
@@ -64,14 +98,6 @@ export function useListSelection<T extends SelectableItem>(items: T[]) {
 		setSelectedIds(new Set());
 	}, []);
 
-	// 5. Copy Helper Logic
-	const getTargetItems = useCallback(() => {
-		const currentSelection = filteredItems.filter((item) =>
-			validSelectedIds.has(item.id),
-		);
-		return currentSelection.length === 0 ? filteredItems : currentSelection;
-	}, [filteredItems, validSelectedIds]);
-
 	return {
 		// Data
 		filteredItems,
@@ -89,7 +115,6 @@ export function useListSelection<T extends SelectableItem>(items: T[]) {
 		toggleSelect,
 		toggleSelectAll,
 		resetSelection,
-		getTargetItems,
 	};
 }
 

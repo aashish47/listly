@@ -16,7 +16,6 @@ const Lists = ({ lists }: ListsProps) => {
 	const {
 		filteredItems,
 		resetSelection,
-		selectedCount,
 		selectedIds,
 		toggleSelect,
 		totalFiltered,
@@ -38,7 +37,6 @@ const Lists = ({ lists }: ListsProps) => {
 							list={list}
 							listSelection={{
 								resetSelection,
-								selectedCount,
 								selectedIds,
 								toggleSelect,
 							}}

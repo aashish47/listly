@@ -21,7 +21,7 @@ interface OuterListItemProps<T extends SelectableItem> {
 	list: List;
 	listSelection: Pick<
 		UseListSelectionReturn<T>,
-		"resetSelection" | "selectedCount" | "selectedIds" | "toggleSelect"
+		"resetSelection" | "selectedIds" | "toggleSelect"
 	>;
 }
 
@@ -30,8 +30,7 @@ const OuterListItem = <T extends SelectableItem>({
 	listSelection,
 }: OuterListItemProps<T>) => {
 	const { id, title } = list;
-	const { resetSelection, selectedCount, selectedIds, toggleSelect } =
-		listSelection;
+	const { resetSelection, selectedIds, toggleSelect } = listSelection;
 	const isSelected = selectedIds.has(id);
 	const updateListWithId = updateList.bind(null, id);
 	const deleteListWithId = deleteList.bind(null, id);
@@ -43,7 +42,7 @@ const OuterListItem = <T extends SelectableItem>({
 				className="group relative transform-gpu backface-hidden"
 				style={{ height: `${ITEM_HEIGHT}px` }}
 			>
-				<div className="flex flex-1">
+				<div className="flex flex-1 gap-2">
 					<div className="flex items-center pr-4">
 						<Checkbox
 							checked={isSelected}

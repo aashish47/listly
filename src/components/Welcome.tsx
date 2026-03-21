@@ -5,7 +5,7 @@ const Welcome = async () => {
 	const { user_metadata, email } = await getSessionUser();
 	return (
 		<div
-			className="content-center self-center"
+			className="shrink-0 content-center text-center"
 			style={{ height: `${HEADER_HEIGHT}px` }}
 		>
 			Welcome, {user_metadata.display_name ?? user_metadata.full_name ?? email}

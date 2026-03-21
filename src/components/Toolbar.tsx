@@ -7,6 +7,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ActionPromise } from "@/types/actions";
+import { useCallback } from "react";
 
 interface ToolbarProps<T extends SelectableItem> {
 	deleteAction: (ids: string[]) => ActionPromise;
@@ -18,9 +19,9 @@ const Toolbar = <T extends SelectableItem>({
 	listSelection,
 }: ToolbarProps<T>) => {
 	const {
-		getTargetItems,
 		isAllSelected,
 		isPartialSelected,
+		filteredItems,
 		resetSelection,
 		searchQuery,
 		selectedCount,
@@ -30,6 +31,13 @@ const Toolbar = <T extends SelectableItem>({
 		toggleSelectAll,
 		totalFiltered,
 	} = listSelection;
+
+	const getTargetItems = useCallback(() => {
+		const currentSelection = filteredItems.filter((item) =>
+			selectedIds.has(item.id),
+		);
+		return currentSelection.length === 0 ? filteredItems : currentSelection;
+	}, [filteredItems, selectedIds]);
 
 	return (
 		<div className="flex flex-wrap items-center gap-2 border-b border-x-transparent px-3 py-2">
