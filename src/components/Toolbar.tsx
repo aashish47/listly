@@ -1,5 +1,5 @@
+import CopyDropDownMenuButton from "@/components/buttons/CopyDropDownMenuButton";
 import DeleteButton from "@/components/buttons/DeleteButton";
-import CopyDropDownMenu from "@/components/CopyDropDownMenu";
 import {
 	SelectableItem,
 	UseListSelectionReturn,
@@ -7,7 +7,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ActionPromise } from "@/types/actions";
-import { useEffect } from "react";
 
 interface ToolbarProps<T extends SelectableItem> {
 	deleteAction: (ids: string[]) => ActionPromise;
@@ -31,10 +30,6 @@ const Toolbar = <T extends SelectableItem>({
 		toggleSelectAll,
 		totalFiltered,
 	} = listSelection;
-
-	useEffect(() => {
-		resetSelection();
-	}, []);
 
 	return (
 		<div className="flex flex-wrap items-center gap-2 border-b border-x-transparent px-3 py-2">
@@ -61,7 +56,7 @@ const Toolbar = <T extends SelectableItem>({
 				/>
 			</div>
 
-			<CopyDropDownMenu items={getTargetItems()} />
+			<CopyDropDownMenuButton items={getTargetItems()} />
 
 			<DeleteButton
 				disabled={selectedCount === 0}

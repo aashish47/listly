@@ -15,16 +15,28 @@ export function useListSelection<T extends SelectableItem>(items: T[]) {
 		return items.filter((item) => item.title.toLowerCase().includes(query));
 	}, [items, searchQuery]);
 
-	// 2. Selection Derived State (scoped to filter)
+	// 2. Selection Derived State (The "Ghost Buster")
+	const validSelectedIds = useMemo(() => {
+		const valid = new Set<string>();
+		// Only keep IDs that actually exist in the current items list
+		items.forEach((item) => {
+			if (selectedIds.has(item.id)) {
+				valid.add(item.id);
+			}
+		});
+		return valid;
+	}, [items, selectedIds]);
+
+	// 3. Selection Derived State (scoped to filter)
 	const totalFiltered = filteredItems.length;
 	const selectedInFilter = filteredItems.filter((item) =>
-		selectedIds.has(item.id),
+		validSelectedIds.has(item.id),
 	).length;
 
 	const isAllSelected = totalFiltered > 0 && selectedInFilter === totalFiltered;
 	const isPartialSelected = selectedInFilter > 0 && !isAllSelected;
 
-	// 3. Selection Handlers
+	// 4. Selection Handlers
 	const toggleSelect = useCallback((id: string) => {
 		setSelectedIds((prev) => {
 			const next = new Set(prev);
@@ -52,22 +64,22 @@ export function useListSelection<T extends SelectableItem>(items: T[]) {
 		setSelectedIds(new Set());
 	}, []);
 
-	// 4. Copy Helper Logic
+	// 5. Copy Helper Logic
 	const getTargetItems = useCallback(() => {
 		const currentSelection = filteredItems.filter((item) =>
-			selectedIds.has(item.id),
+			validSelectedIds.has(item.id),
 		);
 		return currentSelection.length === 0 ? filteredItems : currentSelection;
-	}, [filteredItems, selectedIds]);
+	}, [filteredItems, validSelectedIds]);
 
 	return {
 		// Data
 		filteredItems,
 		searchQuery,
 		setSearchQuery,
-		selectedIds,
+		selectedIds: validSelectedIds,
 		// Stats
-		selectedCount: selectedIds.size, // Total selected in app
+		selectedCount: validSelectedIds.size, // Total selected in app
 		selectedInFilter, // Selected in current view
 		totalFiltered,
 		// Flags
