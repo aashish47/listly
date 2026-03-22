@@ -1,4 +1,3 @@
-import { HEADER_HEIGHT } from "@/constants/dimensions";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
 
 const Welcome = async () => {
@@ -6,7 +5,7 @@ const Welcome = async () => {
 	return (
 		<div
 			className="shrink-0 content-center text-center"
-			style={{ height: `${HEADER_HEIGHT}px` }}
+			// style={{ height: `${ICON_HEIGHT}px` }}
 		>
 			Welcome, {user_metadata.display_name ?? user_metadata.full_name ?? email}
 		</div>

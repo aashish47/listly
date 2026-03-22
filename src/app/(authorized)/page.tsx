@@ -2,9 +2,8 @@ import Form from "@/components/form/Form";
 import { EmptyList } from "@/components/items/EmptyList";
 import Lists from "@/components/items/Lists";
 import FormSkeleton from "@/components/skeletons/FormSkeleton";
-import HeaderSkeleton from "@/components/skeletons/HeaderSkeleton";
 import ItemSkeleton from "@/components/skeletons/ItemSkeleton";
-import Welcome from "@/components/Welcome";
+import { ICON_HEIGHT } from "@/constants/dimensions";
 import { addList } from "@/lib/actions/list-actions";
 import { fetchLists } from "@/lib/data/list-queries";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
@@ -13,9 +12,12 @@ import { Suspense } from "react";
 const Page = async () => {
 	return (
 		<>
-			<Suspense fallback={<HeaderSkeleton />}>
-				<Welcome />
-			</Suspense>
+			<div
+				className="shrink-0 content-center text-center"
+				style={{ height: `${ICON_HEIGHT}px` }}
+			>
+				{""}
+			</div>
 			<Suspense fallback={<FormSkeleton />}>
 				<Form action={addList} buttonName="create" />
 			</Suspense>

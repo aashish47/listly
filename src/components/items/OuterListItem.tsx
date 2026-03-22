@@ -42,7 +42,7 @@ const OuterListItem = <T extends SelectableItem>({
 				className="group relative transform-gpu backface-hidden"
 				style={{ height: `${ITEM_HEIGHT}px` }}
 			>
-				<div className="flex flex-1 gap-2">
+				<div className="flex flex-1 gap-2.5">
 					<div className="flex items-center pr-4">
 						<Checkbox
 							checked={isSelected}
@@ -59,7 +59,7 @@ const OuterListItem = <T extends SelectableItem>({
 					</Link>
 				</div>
 
-				<div className="absolute right-2.5">
+				<div className="absolute right-3">
 					<ItemActions>
 						<UpdateButton title={title} updateAction={updateListWithId} />
 						<DeleteButton
