@@ -34,7 +34,7 @@ const CopyDropDownMenuButton = <T extends SelectableItem>({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="secondary" size="sm" className="gap-2">
+				<Button variant="outline" size="sm" className="h-8 gap-2">
 					<Copy className="h-4 w-4" />
 					<ChevronDown className="h-3 w-3 opacity-50" />
 				</Button>

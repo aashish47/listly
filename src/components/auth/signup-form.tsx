@@ -1,5 +1,5 @@
 import FormButton from "@/components/buttons/FormButton";
-import FormContent from "@/components/FormContent";
+import FormContent from "@/components/form/FormContent";
 import {
 	Card,
 	CardContent,

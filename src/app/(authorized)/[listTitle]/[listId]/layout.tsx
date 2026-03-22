@@ -1,4 +1,4 @@
-import Form from "@/components/Form";
+import Form from "@/components/form/Form";
 import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import HeaderSkeleton from "@/components/skeletons/HeaderSkeleton";
 import { HEADER_HEIGHT } from "@/constants/dimensions";

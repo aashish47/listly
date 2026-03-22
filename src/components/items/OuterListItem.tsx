@@ -18,7 +18,7 @@ import { List } from "@prisma/client";
 import Link from "next/link";
 
 interface OuterListItemProps<T extends SelectableItem> {
-	list: List;
+	item: List;
 	listSelection: Pick<
 		UseListSelectionReturn<T>,
 		"resetSelection" | "selectedIds" | "toggleSelect"
@@ -26,10 +26,10 @@ interface OuterListItemProps<T extends SelectableItem> {
 }
 
 const OuterListItem = <T extends SelectableItem>({
-	list,
+	item,
 	listSelection,
 }: OuterListItemProps<T>) => {
-	const { id, title } = list;
+	const { id, title } = item;
 	const { resetSelection, selectedIds, toggleSelect } = listSelection;
 	const isSelected = selectedIds.has(id);
 	const updateListWithId = updateList.bind(null, id);

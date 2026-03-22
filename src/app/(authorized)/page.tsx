@@ -1,4 +1,4 @@
-import Form from "@/components/Form";
+import Form from "@/components/form/Form";
 import { EmptyList } from "@/components/items/EmptyList";
 import Lists from "@/components/items/Lists";
 import FormSkeleton from "@/components/skeletons/FormSkeleton";
