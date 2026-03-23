@@ -1,5 +1,6 @@
+import InitialsProvider from "@/components/contexts/initials-provider";
+import ItemsProvider from "@/components/contexts/items-provider";
 import Form from "@/components/form/Form";
-import { EmptyList } from "@/components/items/EmptyList";
 import Lists from "@/components/items/Lists";
 import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
@@ -39,15 +40,12 @@ const ListsWrapper = async ({ params, searchParams }: PageProps) => {
 	const userId = user.id;
 	const { q, prefix } = sParams;
 
-	const [lists, availableInitials] = await Promise.all([
-		fetchLists(userId, { q, prefix }),
-		fetchListsInitials(userId),
-	]);
-
-	return availableInitials.length > 0 ? (
-		<Lists availableInitials={availableInitials} lists={lists} />
-	) : (
-		<EmptyList type="lists" />
+	return (
+		<ItemsProvider items={fetchLists(userId, { q, prefix })}>
+			<InitialsProvider initials={fetchListsInitials(userId)}>
+				<Lists />
+			</InitialsProvider>
+		</ItemsProvider>
 	);
 };
 

@@ -3,21 +3,10 @@
 import OuterListItem from "@/components/items/OuterListItem";
 import DataTable from "@/components/table/DataTable";
 import { deleteManyLists } from "@/lib/actions/list-actions";
-import { List } from "@prisma/client";
 
-interface ListsProps {
-	availableInitials: string[];
-	lists: List[];
-}
-
-const Lists = ({ availableInitials, lists }: ListsProps) => {
+const Lists = () => {
 	return (
-		<DataTable
-			availableInitials={availableInitials}
-			deleteAction={deleteManyLists}
-			items={lists}
-			ItemComponent={OuterListItem}
-		/>
+		<DataTable deleteAction={deleteManyLists} ItemComponent={OuterListItem} />
 	);
 };
 

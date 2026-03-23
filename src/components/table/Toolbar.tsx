@@ -1,6 +1,7 @@
 import AlphabetsDropdownButton from "@/components/buttons/AlphabetsDropdownButton";
 import CopyDropDownMenuButton from "@/components/buttons/CopyDropDownMenuButton";
 import DeleteButton from "@/components/buttons/DeleteButton";
+import { useItems } from "@/components/contexts/items-provider";
 import {
 	SelectableItem,
 	UseListSelectionReturn,
@@ -10,18 +11,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ActionPromise } from "@/types/actions";
 
 interface ToolbarProps<T extends SelectableItem> {
-	availableInitials: string[];
-	items: T[];
 	deleteAction: (ids: string[]) => ActionPromise;
 	listSelection: UseListSelectionReturn<T>;
 }
 
 const Toolbar = <T extends SelectableItem>({
-	availableInitials,
-	items,
 	deleteAction,
 	listSelection,
 }: ToolbarProps<T>) => {
+	const items = useItems<T>();
+
 	const {
 		isAllSelected,
 		isPartialSelected,
@@ -55,7 +54,6 @@ const Toolbar = <T extends SelectableItem>({
 			</div>
 
 			<AlphabetsDropdownButton
-				availableInitials={availableInitials}
 				listSelection={{ setStartsWithQuery, startsWithQuery }}
 			/>
 

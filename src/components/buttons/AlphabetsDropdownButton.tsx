@@ -1,4 +1,5 @@
 "use client";
+import { useInitials } from "@/components/contexts/initials-provider";
 import {
 	SelectableItem,
 	UseListSelectionReturn,
@@ -13,7 +14,6 @@ import {
 import { ChevronDown } from "lucide-react";
 
 interface AlphabetsDropdownButtonProps<T extends SelectableItem> {
-	availableInitials: string[];
 	listSelection: Pick<
 		UseListSelectionReturn<T>,
 		"startsWithQuery" | "setStartsWithQuery"
@@ -21,9 +21,9 @@ interface AlphabetsDropdownButtonProps<T extends SelectableItem> {
 }
 
 const AlphabetsDropdownButton = <T extends SelectableItem>({
-	availableInitials,
 	listSelection,
 }: AlphabetsDropdownButtonProps<T>) => {
+	const availableInitials = useInitials();
 	const { startsWithQuery, setStartsWithQuery } = listSelection;
 	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 

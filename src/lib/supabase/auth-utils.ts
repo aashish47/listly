@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server"; // Or your client path
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
