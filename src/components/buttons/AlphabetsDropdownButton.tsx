@@ -13,7 +13,7 @@ import {
 import { ChevronDown } from "lucide-react";
 
 interface AlphabetsDropdownButtonProps<T extends SelectableItem> {
-	items: T[];
+	availableInitials: string[];
 	listSelection: Pick<
 		UseListSelectionReturn<T>,
 		"startsWithQuery" | "setStartsWithQuery"
@@ -21,14 +21,11 @@ interface AlphabetsDropdownButtonProps<T extends SelectableItem> {
 }
 
 const AlphabetsDropdownButton = <T extends SelectableItem>({
-	items,
+	availableInitials,
 	listSelection,
 }: AlphabetsDropdownButtonProps<T>) => {
 	const { startsWithQuery, setStartsWithQuery } = listSelection;
 	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-	const availableInitials = new Set(
-		items.map((item) => item.title[0]?.toUpperCase()),
-	);
 
 	return (
 		<DropdownMenu>
@@ -68,7 +65,7 @@ const AlphabetsDropdownButton = <T extends SelectableItem>({
 					</DropdownMenuItem>
 
 					{alphabet.map((char) => {
-						const hasItems = availableInitials.has(char);
+						const hasItems = availableInitials.includes(char);
 						const isActive =
 							startsWithQuery.toLowerCase() === char.toLowerCase();
 

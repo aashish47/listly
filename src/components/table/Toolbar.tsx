@@ -5,18 +5,19 @@ import {
 	SelectableItem,
 	UseListSelectionReturn,
 } from "@/components/hooks/useListSelection";
+import Searchbar from "@/components/table/Searchbar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { ActionPromise } from "@/types/actions";
-import { useEffect, useState } from "react";
 
 interface ToolbarProps<T extends SelectableItem> {
+	availableInitials: string[];
 	items: T[];
 	deleteAction: (ids: string[]) => ActionPromise;
 	listSelection: UseListSelectionReturn<T>;
 }
 
 const Toolbar = <T extends SelectableItem>({
+	availableInitials,
 	items,
 	deleteAction,
 	listSelection,
@@ -24,7 +25,6 @@ const Toolbar = <T extends SelectableItem>({
 	const {
 		isAllSelected,
 		isPartialSelected,
-		filteredItems,
 		resetSelection,
 		searchQuery,
 		startsWithQuery,
@@ -37,27 +37,13 @@ const Toolbar = <T extends SelectableItem>({
 		totalFiltered,
 	} = listSelection;
 
-	const [localValue, setLocalValue] = useState(searchQuery);
-
-	useEffect(() => {
-		setLocalValue(searchQuery);
-	}, [searchQuery]);
-
-	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const val = e.target.value;
-		setLocalValue(val);
-		setSearchQuery(val);
-	};
-
 	const getTargetItems = () => {
-		const currentSelection = filteredItems.filter((item) =>
-			selectedIds.has(item.id),
-		);
-		return currentSelection.length === 0 ? filteredItems : currentSelection;
+		const currentSelection = items.filter((item) => selectedIds.has(item.id));
+		return currentSelection.length === 0 ? items : currentSelection;
 	};
 
 	return (
-		<div className="flex flex-wrap items-center gap-2 border-b border-x-transparent bg-background px-3 py-2">
+		<div className="flex flex-wrap items-center gap-2 border-t border-b border-x-transparent border-t-transparent bg-background px-3 py-2">
 			<div className="flex items-center gap-2 pr-2">
 				<Checkbox
 					id="select-all"
@@ -69,17 +55,12 @@ const Toolbar = <T extends SelectableItem>({
 			</div>
 
 			<AlphabetsDropdownButton
-				items={items}
+				availableInitials={availableInitials}
 				listSelection={{ setStartsWithQuery, startsWithQuery }}
 			/>
 
 			<div className="min-w-30 flex-1">
-				<Input
-					placeholder="Search..."
-					value={localValue}
-					onChange={handleSearchChange}
-					className="h-8 bg-muted/50 transition-colors focus-visible:bg-background"
-				/>
+				<Searchbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 			</div>
 
 			<div className="mx-1 border-r border-l px-2 text-xs font-medium text-muted-foreground tabular-nums">

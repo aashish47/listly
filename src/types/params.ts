@@ -1,7 +1,17 @@
-export type ListParams = {
+import { SEARCH_PARAMS } from "@/constants/navigation";
+
+export type SearchParamKey = (typeof SEARCH_PARAMS)[keyof typeof SEARCH_PARAMS];
+
+export type ListRouteParams = {
 	listTitle: string;
 	listId: string;
-	alpha?: string;
 };
 
-export type ListParamsPromise = Promise<ListParams>;
+export type ParsedSearchParams = {
+	[K in SearchParamKey]?: string | string[] | undefined;
+};
+
+export interface PageProps {
+	params: Promise<ListRouteParams>;
+	searchParams: Promise<ParsedSearchParams>;
+}

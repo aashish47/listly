@@ -6,12 +6,14 @@ import { deleteManyLists } from "@/lib/actions/list-actions";
 import { List } from "@prisma/client";
 
 interface ListsProps {
+	availableInitials: string[];
 	lists: List[];
 }
 
-const Lists = ({ lists }: ListsProps) => {
+const Lists = ({ availableInitials, lists }: ListsProps) => {
 	return (
 		<DataTable
+			availableInitials={availableInitials}
 			deleteAction={deleteManyLists}
 			items={lists}
 			ItemComponent={OuterListItem}

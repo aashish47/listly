@@ -3,15 +3,18 @@ import { EmptyList } from "@/components/items/EmptyList";
 import ListItems from "@/components/items/ListItems";
 import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import IconSkeleton from "@/components/skeletons/IconSkeleton";
-import ItemSkeleton from "@/components/skeletons/ItemSkeleton";
+import TableSkeleton from "@/components/skeletons/TableSkeleton";
 import { ICON_HEIGHT } from "@/constants/dimensions";
 import { addListItem } from "@/lib/actions/list-item-actions";
-import { fetchListItems } from "@/lib/data/list-item-queries";
+import {
+	fetchListItems,
+	fetchListItemsInitials,
+} from "@/lib/data/list-item-queries";
 import { fetchListById } from "@/lib/data/list-queries";
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
-import { slugify } from "@/lib/utils";
-import { ListParamsPromise } from "@/types/params";
+import { normalizeSearchParamToString, slugify } from "@/lib/utils";
+import { PageProps } from "@/types/params";
 import { Suspense } from "react";
 
 export async function generateStaticParams() {
@@ -24,23 +27,23 @@ export async function generateStaticParams() {
 	});
 }
 
-const Page = async ({ params }: { params: ListParamsPromise }) => {
+const Page = async ({ params, searchParams }: PageProps) => {
 	return (
 		<>
 			<Suspense fallback={<IconSkeleton />}>
-				<ListName params={params} />
+				<ListName params={params} searchParams={searchParams} />
 			</Suspense>
 			<Suspense fallback={<FormSkeleton />}>
-				<FormWrapper params={params} />
+				<FormWrapper params={params} searchParams={searchParams} />
 			</Suspense>
-			<Suspense fallback={<ItemSkeleton />}>
-				<ListItemsWrapper params={params} />
+			<Suspense fallback={<TableSkeleton />}>
+				<ListItemsWrapper params={params} searchParams={searchParams} />
 			</Suspense>
 		</>
 	);
 };
 
-const ListName = async ({ params }: { params: ListParamsPromise }) => {
+const ListName = async ({ params, searchParams }: PageProps) => {
 	const user = await getSessionUser();
 	const { listId } = await params;
 	const { title } = await fetchListById(user.id, listId);
@@ -55,18 +58,30 @@ const ListName = async ({ params }: { params: ListParamsPromise }) => {
 	);
 };
 
-const FormWrapper = async ({ params }: { params: ListParamsPromise }) => {
+const FormWrapper = async ({ params, searchParams }: PageProps) => {
 	const { listId } = await params;
 	const addListItemWithId = addListItem.bind(null, listId);
 	return <Form action={addListItemWithId} buttonName="add" />;
 };
 
-const ListItemsWrapper = async ({ params }: { params: ListParamsPromise }) => {
-	const { listId } = await params;
-	const { id } = await getSessionUser();
-	const listItems = await fetchListItems(listId, id);
-	return listItems.length > 0 ? (
-		<ListItems listItems={listItems} />
+const ListItemsWrapper = async ({ params, searchParams }: PageProps) => {
+	const [user, rParams, sParams] = await Promise.all([
+		getSessionUser(),
+		params,
+		normalizeSearchParamToString(searchParams),
+	]);
+
+	const userId = user.id;
+	const { listId } = rParams;
+	const { q, prefix } = sParams;
+
+	const [listItems, availableInitials] = await Promise.all([
+		fetchListItems(listId, userId, { q, prefix }),
+		fetchListItemsInitials(listId, userId),
+	]);
+
+	return availableInitials.length > 0 ? (
+		<ListItems availableInitials={availableInitials} listItems={listItems} />
 	) : (
 		<EmptyList type="items" />
 	);

@@ -1,3 +1,4 @@
+import { ParsedSearchParams } from "@/types/params";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -30,4 +31,13 @@ export const slugify = (text: string) => {
 		.replace(/\s+/g, "-") // Replace spaces with -
 		.replace(/[^\w\-]+/g, "") // Remove all non-word chars (emojis, punctuation)
 		.replace(/\-\-+/g, "-"); // Replace multiple - with single -
+};
+
+export const normalizeSearchParamToString = async (
+	searchParams: Promise<ParsedSearchParams>,
+) => {
+	const sp = await searchParams;
+	const q = typeof sp.q === "string" ? sp.q : undefined;
+	const prefix = typeof sp.prefix === "string" ? sp.prefix : undefined;
+	return { q, prefix };
 };

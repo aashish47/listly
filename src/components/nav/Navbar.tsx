@@ -1,8 +1,8 @@
 import HomeButton from "@/components/buttons/HomeButton";
 import LogoutButton from "@/components/buttons/LogoutButton";
 import { ModeToggleButton } from "@/components/buttons/ModeToggleButton";
+import Welcome from "@/components/nav/Welcome";
 import IconSkeleton from "@/components/skeletons/IconSkeleton";
-import Welcome from "@/components/Welcome";
 import { Suspense } from "react";
 
 const Navbar = () => {

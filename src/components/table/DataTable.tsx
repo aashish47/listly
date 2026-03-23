@@ -10,6 +10,7 @@ import { ActionPromise } from "@/types/actions";
 import { Virtuoso } from "react-virtuoso";
 
 interface DataTableProps<T extends SelectableItem> {
+	availableInitials: string[];
 	deleteAction: (ids: string[]) => ActionPromise;
 	items: T[];
 	ItemComponent: React.ComponentType<{
@@ -22,22 +23,19 @@ interface DataTableProps<T extends SelectableItem> {
 }
 
 const DataTable = <T extends SelectableItem>({
+	availableInitials,
 	deleteAction,
 	items,
 	ItemComponent,
 }: DataTableProps<T>) => {
 	const listSelection = useListSelection(items);
-	const {
-		filteredItems,
-		resetSelection,
-		selectedIds,
-		toggleSelect,
-		totalFiltered,
-	} = listSelection;
+	const { resetSelection, selectedIds, toggleSelect, totalFiltered } =
+		listSelection;
 
 	return (
 		<div className="flex h-full grow flex-col gap-2">
 			<Toolbar
+				availableInitials={availableInitials}
 				items={items}
 				deleteAction={deleteAction}
 				listSelection={listSelection}
@@ -46,7 +44,7 @@ const DataTable = <T extends SelectableItem>({
 			<div className="grow">
 				<Virtuoso
 					className="no-scrollbar"
-					data={filteredItems}
+					data={items}
 					fixedItemHeight={64} // item height(56px) + padding-bottom(8px)
 					overscan={500}
 					totalCount={totalFiltered}

@@ -1,5 +1,6 @@
+import { SEARCH_PARAMS } from "@/constants/navigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface SelectableItem {
 	id: string;
@@ -8,8 +9,8 @@ export interface SelectableItem {
 
 export function useListSelection<T extends SelectableItem>(
 	items: T[],
-	searchKey = "search",
-	startsWithKey = "startswith",
+	q = SEARCH_PARAMS.QUERY,
+	prefix = SEARCH_PARAMS.PREFIX,
 ) {
 	const router = useRouter();
 	const pathname = usePathname();
@@ -18,9 +19,9 @@ export function useListSelection<T extends SelectableItem>(
 	// 1. Local State for Selection
 	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-	// 2. Sync from URL (Now async-safe in Next 16)
-	const searchQuery = searchParams.get(searchKey) || "";
-	const startsWithQuery = searchParams.get(startsWithKey) || "";
+	// 2. Sync from URL
+	const searchQuery = searchParams.get(q) || "";
+	const startsWithQuery = searchParams.get(prefix) || "";
 
 	// 3. Debounced Search (Ref required for the timer lifecycle)
 	const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -29,43 +30,28 @@ export function useListSelection<T extends SelectableItem>(
 		if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
 		searchTimeoutRef.current = setTimeout(() => {
 			const params = new URLSearchParams(window.location.search);
-			query
-				? params.set(searchKey, query.toLowerCase())
-				: params.delete(searchKey);
+			query ? params.set(q, query.toLowerCase()) : params.delete(q);
 			router.replace(`${pathname}?${params.toString()}`, { scroll: false });
 		}, 300);
 	};
 
 	const setStartsWithQuery = (query: string) => {
 		const params = new URLSearchParams(window.location.search);
-		query
-			? params.set(startsWithKey, query.toLowerCase())
-			: params.delete(startsWithKey);
+		query ? params.set(prefix, query.toLowerCase()) : params.delete(prefix);
 		router.replace(`${pathname}?${params.toString()}`, { scroll: false });
 	};
 
-	// 4. Filtering (Compiler handles the memoization automatically)
-	const deferredSearch = useDeferredValue(searchQuery);
-	const filteredItems = items.filter((item) => {
-		const title = item.title.toLowerCase();
-		const matchesSearch = title.includes(deferredSearch.toLowerCase());
-		const matchesAlpha = startsWithQuery
-			? title.startsWith(startsWithQuery.toLowerCase())
-			: true;
-		return matchesSearch && matchesAlpha;
-	});
-
-	// 5. Derived State
+	// 4. Derived State
 	const validSelectedIds = new Set(
 		[...selectedIds].filter((id) => items.some((i) => i.id === id)),
 	);
-	const totalFiltered = filteredItems.length;
-	const selectedInFilter = filteredItems.filter((item) =>
+	const totalFiltered = items.length;
+	const selectedInFilter = items.filter((item) =>
 		validSelectedIds.has(item.id),
 	).length;
 	const isAllSelected = totalFiltered > 0 && selectedInFilter === totalFiltered;
 
-	// 6. Selection Handlers
+	// 5. Selection Handlers
 	const toggleSelect = (id: string) => {
 		setSelectedIds((prev) => {
 			const next = new Set(prev);
@@ -78,15 +64,15 @@ export function useListSelection<T extends SelectableItem>(
 		setSelectedIds((prev) => {
 			const next = new Set(prev);
 			if (isAllSelected) {
-				filteredItems.forEach((item) => next.delete(item.id));
+				items.forEach((item) => next.delete(item.id));
 			} else {
-				filteredItems.forEach((item) => next.add(item.id));
+				items.forEach((item) => next.add(item.id));
 			}
 			return next;
 		});
 	};
 
-	// Cleanup Effect (Still necessary for side-effects)
+	// Cleanup Effect
 	useEffect(() => {
 		return () => {
 			if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
@@ -94,7 +80,6 @@ export function useListSelection<T extends SelectableItem>(
 	}, []);
 
 	return {
-		filteredItems,
 		searchQuery,
 		setSearchQuery,
 		startsWithQuery,
