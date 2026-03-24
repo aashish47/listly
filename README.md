@@ -2,7 +2,7 @@
 
 A simple list-making application that allows users to create, manage, and toggle between multiple custom lists.
 
-<img width="2560" height="1280" alt="listly47 vercel app_vocabulary_cmmvxnb2d00001c4idy6l0450" src="https://github.com/user-attachments/assets/c3154108-5f5f-4f21-8c18-5afe010562be" />
+<img width="2560" height="1280" alt="listly47 vercel app_vocabulary_cmmvxnb2d00001c4idy6l0450" src="https://github.com/user-attachments/assets/3b45a13c-e2dd-4c9c-9cb0-a448f0d5e0be" />
 
 ## Installation
 
