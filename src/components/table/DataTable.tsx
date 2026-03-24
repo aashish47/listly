@@ -4,29 +4,16 @@ import { useItems } from "@/components/contexts/items-provider";
 import {
 	SelectableItem,
 	useListSelection,
-	UseListSelectionReturn,
 } from "@/components/hooks/useListSelection";
+import ListItem from "@/components/items/ListItem";
 import ItemSkeleton from "@/components/skeletons/ItemSkeleton";
 import Toolbar from "@/components/table/Toolbar";
-import { ActionPromise } from "@/types/actions";
+import { useParams } from "next/navigation";
 import { Virtuoso } from "react-virtuoso";
 
-interface DataTableProps<T extends SelectableItem> {
-	deleteAction: (ids: string[]) => ActionPromise;
-	ItemComponent: React.ComponentType<{
-		item: T;
-		listSelection: Pick<
-			UseListSelectionReturn<T>,
-			"resetSelection" | "selectedIds" | "toggleSelect"
-		>;
-	}>;
-}
-
-const DataTable = <T extends SelectableItem>({
-	deleteAction,
-	ItemComponent,
-}: DataTableProps<T>) => {
+const DataTable = <T extends SelectableItem>() => {
 	const items = useItems<T>();
+	const { listId } = useParams();
 
 	const listSelection = useListSelection(items);
 	const { isPending, resetSelection, selectedIds, toggleSelect, totalItems } =
@@ -34,17 +21,18 @@ const DataTable = <T extends SelectableItem>({
 
 	return (
 		<div className="flex h-full grow flex-col gap-2">
-			<Toolbar deleteAction={deleteAction} listSelection={listSelection} />
+			<Toolbar listSelection={listSelection} />
 			{!isPending ? (
 				<div className="grow">
 					<Virtuoso
 						className="no-scrollbar"
 						data={items}
-						fixedItemHeight={64} // item height(56px) + padding-bottom(8px)
+						// fixedItemHeight={64} // item height(56px) + padding-bottom(8px)
 						overscan={500}
 						totalCount={totalItems}
 						itemContent={(index, item) => (
-							<ItemComponent
+							<ListItem
+								listType={listId ? "inner" : "outer"}
 								item={item}
 								listSelection={{
 									resetSelection,

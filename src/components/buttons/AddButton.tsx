@@ -1,5 +1,5 @@
 "use client";
-import FormButton from "@/components/buttons/FormButton";
+import FormButton, { FormButtonName } from "@/components/buttons/FormButton";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -12,27 +12,32 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { ActionPromise } from "@/types/actions";
 import { format } from "date-fns";
-import { PencilIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface UpdateButtonProps {
-	title: string;
-	updateAction: (formData: FormData) => ActionPromise;
+export type FormType = Extract<FormButtonName, "add" | "create">;
+
+interface AddButtonProps {
+	title?: string;
+	formType: FormType;
+	addAction: (formData: FormData) => ActionPromise;
 }
 
-const UpdateButton = ({ title, updateAction }: UpdateButtonProps) => {
+const description: Record<FormType, string> = {
+	add: "Add new items to the list",
+	create: "Create new lists",
+};
+
+const AddButton = ({ title, formType, addAction }: AddButtonProps) => {
 	const [open, setOpen] = useState(false);
 
 	const handleAction = async (formData: FormData) => {
-		const result = await updateAction(formData);
-		if (result.success) {
-			setOpen(false);
-		}
+		const result = await addAction(formData);
 		const toastType = result.success ? "success" : "error";
 		toast[toastType](result.message, {
 			description: format(result.date, "PPPPpp"),
@@ -42,33 +47,45 @@ const UpdateButton = ({ title, updateAction }: UpdateButtonProps) => {
 		}
 	};
 
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+		if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+			e.preventDefault();
+			e.currentTarget.form?.requestSubmit();
+		}
+	};
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button variant="outline" size="icon">
-					<PencilIcon />
+					<PlusIcon />
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="sm:max-w-sm">
-				<DialogHeader>
-					<DialogTitle>Edit</DialogTitle>
+				<DialogHeader className="min-w-0">
+					<DialogTitle className="truncate">{title || "New"}</DialogTitle>
 					<DialogDescription>
-						Make changes to your list here. Click save when you&apos;re done.
+						{description[formType]}. Click {formType} when you&apos;re done.
 					</DialogDescription>
 				</DialogHeader>
 
 				<form action={handleAction} className="contents">
 					<FieldGroup>
 						<Field>
-							<Label htmlFor="title-1">Title</Label>
-							<Input id="title-1" name="title" defaultValue={title} />
+							<Label htmlFor="titles">Titles</Label>
+							<Textarea
+								placeholder="Press Cmd+Enter to save"
+								id="titles"
+								name="titles"
+								onKeyDown={handleKeyDown}
+							/>
 						</Field>
 					</FieldGroup>
 					<DialogFooter>
 						<DialogClose asChild>
 							<Button variant="outline">Cancel</Button>
 						</DialogClose>
-						<FormButton formAction={handleAction} formType="save" />
+						<FormButton formType={formType} formAction={handleAction} />
 					</DialogFooter>
 				</form>
 			</DialogContent>
@@ -76,4 +93,4 @@ const UpdateButton = ({ title, updateAction }: UpdateButtonProps) => {
 	);
 };
 
-export default UpdateButton;
+export default AddButton;

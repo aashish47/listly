@@ -39,7 +39,7 @@ const CopyDropDownMenuButton = <T extends SelectableItem>({
 					<ChevronDown className="h-3 w-3 opacity-50" />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="start" className="w-40">
+			<DropdownMenuContent align="end" className="w-40">
 				<DropdownMenuItem onClick={copyFullObject} className="gap-2">
 					<FileJson className="h-4 w-4 text-muted-foreground" />
 					<span>Copy JSON</span>

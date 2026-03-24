@@ -1,12 +1,10 @@
 import InitialsProvider from "@/components/contexts/initials-provider";
+import ItemProvider from "@/components/contexts/item-provider";
 import ItemsProvider from "@/components/contexts/items-provider";
-import Form from "@/components/form/Form";
-import ListItems from "@/components/items/ListItems";
-import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import IconSkeleton from "@/components/skeletons/IconSkeleton";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
+import DataTable from "@/components/table/DataTable";
 import { ICON_HEIGHT } from "@/constants/dimensions";
-import { addListItem } from "@/lib/actions/list-item-actions";
 import {
 	fetchListItems,
 	fetchListItemsInitials,
@@ -34,9 +32,6 @@ const Page = async ({ params, searchParams }: PageProps) => {
 			<Suspense fallback={<IconSkeleton />}>
 				<ListName params={params} searchParams={searchParams} />
 			</Suspense>
-			<Suspense fallback={<FormSkeleton />}>
-				<FormWrapper params={params} searchParams={searchParams} />
-			</Suspense>
 			<Suspense fallback={<TableSkeleton />}>
 				<ListItemsWrapper params={params} searchParams={searchParams} />
 			</Suspense>
@@ -51,18 +46,12 @@ const ListName = async ({ params, searchParams }: PageProps) => {
 
 	return (
 		<div
-			className="shrink-0 content-center text-center md:text-2xl"
+			className="shrink-0 content-center truncate text-center md:text-2xl"
 			style={{ height: `${ICON_HEIGHT}px` }}
 		>
 			{title}
 		</div>
 	);
-};
-
-const FormWrapper = async ({ params, searchParams }: PageProps) => {
-	const { listId } = await params;
-	const addListItemWithId = addListItem.bind(null, listId);
-	return <Form action={addListItemWithId} buttonName="add" />;
 };
 
 const ListItemsWrapper = async ({ params, searchParams }: PageProps) => {
@@ -77,11 +66,13 @@ const ListItemsWrapper = async ({ params, searchParams }: PageProps) => {
 	const { q, prefix } = sParams;
 
 	return (
-		<ItemsProvider items={fetchListItems(listId, userId, { q, prefix })}>
-			<InitialsProvider initials={fetchListItemsInitials(listId, userId)}>
-				<ListItems />
-			</InitialsProvider>
-		</ItemsProvider>
+		<ItemProvider item={fetchListById(userId, listId)}>
+			<ItemsProvider items={fetchListItems(listId, userId, { q, prefix })}>
+				<InitialsProvider initials={fetchListItemsInitials(listId, userId)}>
+					<DataTable />
+				</InitialsProvider>
+			</ItemsProvider>
+		</ItemProvider>
 	);
 };
 

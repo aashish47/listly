@@ -78,12 +78,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 							</Field>
 							<FieldGroup>
 								<Field>
-									<FormButton formAction={signup} buttonName="signup" />
+									<FormButton formAction={signup} formType="signup" />
 									<FormButton
 										formNoValidate
 										variant="outline"
 										formAction={googleOuth}
-										buttonName="signup"
+										formType="signup"
 										oAuth="google"
 									/>
 									<FieldDescription className="px-6 text-center">

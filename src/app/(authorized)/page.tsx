@@ -1,11 +1,8 @@
 import InitialsProvider from "@/components/contexts/initials-provider";
 import ItemsProvider from "@/components/contexts/items-provider";
-import Form from "@/components/form/Form";
-import Lists from "@/components/items/Lists";
-import FormSkeleton from "@/components/skeletons/FormSkeleton";
 import TableSkeleton from "@/components/skeletons/TableSkeleton";
+import DataTable from "@/components/table/DataTable";
 import { ICON_HEIGHT } from "@/constants/dimensions";
-import { addList } from "@/lib/actions/list-actions";
 import { fetchLists, fetchListsInitials } from "@/lib/data/list-queries";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
 import { normalizeSearchParamToString } from "@/lib/utils";
@@ -21,9 +18,7 @@ const Page = async ({ params, searchParams }: PageProps) => {
 			>
 				{""}
 			</div>
-			<Suspense fallback={<FormSkeleton />}>
-				<Form action={addList} buttonName="create" />
-			</Suspense>
+
 			<Suspense fallback={<TableSkeleton />}>
 				<ListsWrapper params={params} searchParams={searchParams} />
 			</Suspense>
@@ -43,7 +38,7 @@ const ListsWrapper = async ({ params, searchParams }: PageProps) => {
 	return (
 		<ItemsProvider items={fetchLists(userId, { q, prefix })}>
 			<InitialsProvider initials={fetchListsInitials(userId)}>
-				<Lists />
+				<DataTable />
 			</InitialsProvider>
 		</ItemsProvider>
 	);

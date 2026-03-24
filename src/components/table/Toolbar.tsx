@@ -1,6 +1,8 @@
+import AddButton from "@/components/buttons/AddButton";
 import AlphabetsDropdownButton from "@/components/buttons/AlphabetsDropdownButton";
 import CopyDropDownMenuButton from "@/components/buttons/CopyDropDownMenuButton";
 import DeleteButton from "@/components/buttons/DeleteButton";
+import { useItem } from "@/components/contexts/item-provider";
 import { useItems } from "@/components/contexts/items-provider";
 import {
 	SelectableItem,
@@ -8,18 +10,42 @@ import {
 } from "@/components/hooks/useListSelection";
 import Searchbar from "@/components/table/Searchbar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ActionPromise } from "@/types/actions";
+import { addList, deleteManyLists } from "@/lib/actions/list-actions";
+import {
+	addListItem,
+	deleteManyListItems,
+} from "@/lib/actions/list-item-actions";
+import { useParams } from "next/navigation";
 
 interface ToolbarProps<T extends SelectableItem> {
-	deleteAction: (ids: string[]) => ActionPromise;
 	listSelection: UseListSelectionReturn<T>;
 }
 
 const Toolbar = <T extends SelectableItem>({
-	deleteAction,
 	listSelection,
 }: ToolbarProps<T>) => {
 	const items = useItems<T>();
+	const { title } = useItem();
+	const { listId } = useParams();
+	const id = typeof listId === "string" ? listId : undefined;
+
+	// Define the two modes
+	const modes = {
+		add: {
+			action: addListItem.bind(null, id!), // id exists if we are in 'add' mode
+			deleteAction: deleteManyListItems,
+			type: "add" as const,
+		},
+		create: {
+			action: addList,
+			deleteAction: deleteManyLists,
+			type: "create" as const,
+		},
+	};
+
+	// Select the mode based on whether id exists
+	const currentMode = id ? modes.add : modes.create;
+	const { action: addAction, deleteAction, type: formType } = currentMode;
 
 	const {
 		isAllSelected,
@@ -65,6 +91,8 @@ const Toolbar = <T extends SelectableItem>({
 			</div>
 
 			<CopyDropDownMenuButton items={getTargetItems()} />
+
+			<AddButton title={title} addAction={addAction} formType={formType} />
 
 			<DeleteButton
 				disabled={selectedCount === 0}

@@ -64,12 +64,12 @@ export function LoginForm({
 									/>
 								</Field>
 								<Field>
-									<FormButton formAction={login} buttonName="login" />
+									<FormButton formAction={login} formType="login" />
 									<FormButton
 										formNoValidate
 										variant="outline"
 										formAction={googleOuth}
-										buttonName="login"
+										formType="login"
 										oAuth="google"
 									/>
 									<FieldDescription className="text-center">
