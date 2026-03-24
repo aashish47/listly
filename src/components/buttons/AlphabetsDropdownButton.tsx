@@ -33,7 +33,7 @@ const AlphabetsDropdownButton = <T extends SelectableItem>({
 				<Button
 					variant="outline"
 					size="sm"
-					className="h-8 gap-2 px-3 font-medium transition-all hover:bg-accent active:scale-95"
+					className="h-8 gap-2 px-2 font-medium transition-all hover:bg-accent active:scale-95"
 				>
 					<span className="max-w-15 min-w-5 truncate tracking-tight uppercase">
 						{startsWithQuery || "A-Z"}

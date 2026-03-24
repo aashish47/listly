@@ -1,9 +1,6 @@
 import HomeButton from "@/components/buttons/HomeButton";
 import LogoutButton from "@/components/buttons/LogoutButton";
 import { ModeToggleButton } from "@/components/buttons/ModeToggleButton";
-import Welcome from "@/components/nav/Welcome";
-import IconSkeleton from "@/components/skeletons/IconSkeleton";
-import { Suspense } from "react";
 
 const Navbar = () => {
 	return (
@@ -12,9 +9,9 @@ const Navbar = () => {
 				<HomeButton />
 				<ModeToggleButton />
 			</div>
-			<Suspense fallback={<IconSkeleton />}>
+			{/* <Suspense fallback={<IconSkeleton />}>
 				<Welcome />
-			</Suspense>
+			</Suspense> */}
 			<LogoutButton />
 		</div>
 	);

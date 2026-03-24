@@ -1,6 +1,6 @@
 import { SEARCH_PARAMS } from "@/constants/navigation";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 export interface SelectableItem {
 	id: string;
@@ -16,6 +16,7 @@ export function useListSelection<T extends SelectableItem>(
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
+	const [isPending, startTransition] = useTransition();
 	// 1. Local State for Selection
 	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
@@ -31,25 +32,34 @@ export function useListSelection<T extends SelectableItem>(
 		searchTimeoutRef.current = setTimeout(() => {
 			const params = new URLSearchParams(window.location.search);
 			query ? params.set(q, query.toLowerCase()) : params.delete(q);
-			router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+			startTransition(() =>
+				router.replace(`${pathname}?${params.toString()}`, { scroll: false }),
+			);
 		}, 300);
 	};
 
 	const setStartsWithQuery = (query: string) => {
 		const params = new URLSearchParams(window.location.search);
 		query ? params.set(prefix, query.toLowerCase()) : params.delete(prefix);
-		router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+		startTransition(() =>
+			router.replace(`${pathname}?${params.toString()}`, { scroll: false }),
+		);
 	};
 
 	// 4. Derived State
+	const totalItems = items.length;
+
+	// 4.1. Get the IDs currently visible in the items list
+	const itemIdsInView = new Set(items.map((i) => i.id));
+
+	// 4.2. Filter selectedIds by what is actually in view
 	const validSelectedIds = new Set(
-		[...selectedIds].filter((id) => items.some((i) => i.id === id)),
+		[...selectedIds].filter((id) => itemIdsInView.has(id)),
 	);
-	const totalFiltered = items.length;
-	const selectedInFilter = items.filter((item) =>
-		validSelectedIds.has(item.id),
-	).length;
-	const isAllSelected = totalFiltered > 0 && selectedInFilter === totalFiltered;
+	const selectedCount = validSelectedIds.size;
+
+	// 4.3. Logic check
+	const isAllSelected = totalItems > 0 && totalItems === selectedCount;
 
 	// 5. Selection Handlers
 	const toggleSelect = (id: string) => {
@@ -80,16 +90,16 @@ export function useListSelection<T extends SelectableItem>(
 	}, []);
 
 	return {
+		isPending,
 		searchQuery,
 		setSearchQuery,
 		startsWithQuery,
 		setStartsWithQuery,
 		selectedIds: validSelectedIds,
-		selectedCount: validSelectedIds.size,
-		selectedInFilter,
-		totalFiltered,
+		selectedCount,
+		totalItems,
 		isAllSelected,
-		isPartialSelected: selectedInFilter > 0 && !isAllSelected,
+		isPartialSelected: selectedCount > 0 && !isAllSelected,
 		toggleSelect,
 		toggleSelectAll,
 		resetSelection: () => setSelectedIds(new Set()),

@@ -51,7 +51,7 @@ const ListName = async ({ params, searchParams }: PageProps) => {
 
 	return (
 		<div
-			className="shrink-0 content-center text-center text-2xl"
+			className="shrink-0 content-center text-center md:text-2xl"
 			style={{ height: `${ICON_HEIGHT}px` }}
 		>
 			{title}

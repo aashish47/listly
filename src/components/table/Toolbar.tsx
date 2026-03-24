@@ -30,10 +30,9 @@ const Toolbar = <T extends SelectableItem>({
 		setStartsWithQuery,
 		selectedCount,
 		selectedIds,
-		selectedInFilter,
 		setSearchQuery,
 		toggleSelectAll,
-		totalFiltered,
+		totalItems,
 	} = listSelection;
 
 	const getTargetItems = () => {
@@ -43,7 +42,7 @@ const Toolbar = <T extends SelectableItem>({
 
 	return (
 		<div className="flex flex-wrap items-center gap-2 border-t border-b border-x-transparent border-t-transparent bg-background px-3 py-2">
-			<div className="flex items-center gap-2 pr-2">
+			<div className="flex items-center gap-2">
 				<Checkbox
 					id="select-all"
 					checked={
@@ -57,12 +56,12 @@ const Toolbar = <T extends SelectableItem>({
 				listSelection={{ setStartsWithQuery, startsWithQuery }}
 			/>
 
-			<div className="min-w-30 flex-1">
+			<div className="flex-1">
 				<Searchbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 			</div>
 
-			<div className="mx-1 border-r border-l px-2 text-xs font-medium text-muted-foreground tabular-nums">
-				{selectedInFilter} / {totalFiltered}
+			<div className="mx-1 hidden border-r border-l px-2 text-xs font-medium text-muted-foreground tabular-nums sm:block">
+				{selectedCount} / {totalItems}
 			</div>
 
 			<CopyDropDownMenuButton items={getTargetItems()} />
