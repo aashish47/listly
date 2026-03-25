@@ -30,6 +30,7 @@ export const fetchLists = cache(
 );
 
 export const fetchListById = cache(async (userId: string, id: string) => {
+	if (!id) return { id: "", title: "" };
 	cacheLife("max");
 	cacheTag("lists");
 

@@ -15,7 +15,6 @@ import {
 	addListItem,
 	deleteManyListItems,
 } from "@/lib/actions/list-item-actions";
-import { useParams } from "next/navigation";
 
 interface ToolbarProps<T extends SelectableItem> {
 	listSelection: UseListSelectionReturn<T>;
@@ -25,27 +24,25 @@ const Toolbar = <T extends SelectableItem>({
 	listSelection,
 }: ToolbarProps<T>) => {
 	const items = useItems<T>();
-	const { title } = useItem();
-	const { listId } = useParams();
-	const id = typeof listId === "string" ? listId : undefined;
+	const { id, title } = useItem();
 
 	// Define the two modes
 	const modes = {
-		add: {
-			action: addListItem.bind(null, id!), // id exists if we are in 'add' mode
+		inner: {
+			addAction: addListItem.bind(null, id!), // id exists if we are in 'add' mode
 			deleteAction: deleteManyListItems,
-			type: "add" as const,
+			formType: "add" as const,
 		},
-		create: {
-			action: addList,
+		outer: {
+			addAction: addList,
 			deleteAction: deleteManyLists,
-			type: "create" as const,
+			formType: "create" as const,
 		},
 	};
 
 	// Select the mode based on whether id exists
-	const currentMode = id ? modes.add : modes.create;
-	const { action: addAction, deleteAction, type: formType } = currentMode;
+	const currentMode = id ? modes.inner : modes.outer;
+	const { addAction, deleteAction, formType } = currentMode;
 
 	const {
 		isAllSelected,

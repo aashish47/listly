@@ -1,28 +1,30 @@
 "use client";
 
-import { List } from "@prisma/client";
+import { SelectableItem } from "@/components/hooks/useListSelection";
 import React, { createContext, use } from "react";
 
-const ItemContext = createContext<Promise<List> | Promise<{ title: string }>>(
-	new Promise((resolve) => resolve({ title: "" })),
-);
+const ItemContext = createContext<Promise<SelectableItem> | null>(null);
 
-const ItemProvider = ({
+const ItemProvider = <T extends SelectableItem>({
 	children,
 	item,
 }: {
 	children: React.ReactNode;
-	item: Promise<List>;
+	item: Promise<T>;
 }) => {
-	return <ItemContext value={item}>{children}</ItemContext>;
+	return (
+		<ItemContext value={item as Promise<SelectableItem>}>
+			{children}
+		</ItemContext>
+	);
 };
 
 export default ItemProvider;
 
-export const useItem = () => {
+export const useItem = <T extends SelectableItem>() => {
 	const promise = use(ItemContext);
 	if (!promise) {
 		throw new Error("useItem must be withing ItemProvider");
 	}
-	return use(promise);
+	return use(promise) as T;
 };

@@ -3,7 +3,9 @@
 import { SelectableItem } from "@/components/hooks/useListSelection";
 import React, { createContext, use } from "react";
 
-export const ItemsContext = createContext<Promise<any[]> | null>(null);
+export const ItemsContext = createContext<Promise<SelectableItem[]> | null>(
+	null,
+);
 
 const ItemsProvider = <T extends SelectableItem>({
 	children,
@@ -13,7 +15,9 @@ const ItemsProvider = <T extends SelectableItem>({
 	items: Promise<T[]>;
 }) => {
 	return (
-		<ItemsContext value={items as Promise<any[]>}>{children}</ItemsContext>
+		<ItemsContext value={items as Promise<SelectableItem[]>}>
+			{children}
+		</ItemsContext>
 	);
 };
 
