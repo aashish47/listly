@@ -31,7 +31,11 @@ export function useListSelection<T extends SelectableItem>(
 		if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
 		searchTimeoutRef.current = setTimeout(() => {
 			const params = new URLSearchParams(window.location.search);
-			query ? params.set(q, query.toLowerCase()) : params.delete(q);
+			if (query) {
+				params.set(q, query.toLowerCase());
+			} else {
+				params.delete(q);
+			}
 			startTransition(() =>
 				router.replace(`${pathname}?${params.toString()}`, { scroll: false }),
 			);
@@ -40,7 +44,12 @@ export function useListSelection<T extends SelectableItem>(
 
 	const setStartsWithQuery = (query: string) => {
 		const params = new URLSearchParams(window.location.search);
-		query ? params.set(prefix, query.toLowerCase()) : params.delete(prefix);
+
+		if (query) {
+			params.set(prefix, query.toLowerCase());
+		} else {
+			params.delete(prefix);
+		}
 		startTransition(() =>
 			router.replace(`${pathname}?${params.toString()}`, { scroll: false }),
 		);
@@ -65,7 +74,11 @@ export function useListSelection<T extends SelectableItem>(
 	const toggleSelect = (id: string) => {
 		setSelectedIds((prev) => {
 			const next = new Set(prev);
-			next.has(id) ? next.delete(id) : next.add(id);
+			if (next.has(id)) {
+				next.delete(id);
+			} else {
+				next.add(id);
+			}
 			return next;
 		});
 	};
