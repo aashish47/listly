@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectableItem } from "@/components/hooks/useListSelection";
+import { SelectableItem } from "@/hooks/useListSelection";
 import React, { createContext, use } from "react";
 
 export const ItemsContext = createContext<Promise<SelectableItem[]> | null>(

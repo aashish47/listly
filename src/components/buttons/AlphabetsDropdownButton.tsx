@@ -1,9 +1,4 @@
 "use client";
-import { useInitials } from "@/components/contexts/initials-provider";
-import {
-	SelectableItem,
-	UseListSelectionReturn,
-} from "@/components/hooks/useListSelection";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -11,6 +6,11 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useInitials } from "@/contexts/initials-provider";
+import {
+	SelectableItem,
+	UseListSelectionReturn,
+} from "@/hooks/useListSelection";
 import { ChevronDown } from "lucide-react";
 
 interface AlphabetsDropdownButtonProps<T extends SelectableItem> {

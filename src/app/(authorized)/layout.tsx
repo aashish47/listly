@@ -1,5 +1,5 @@
-import AuthProvider from "@/components/contexts/auth-provider";
 import Navbar from "@/components/nav/Navbar";
+import AuthProvider from "@/contexts/auth-provider";
 import { getSessionUser } from "@/lib/supabase/auth-utils";
 
 export default async function Layout({
@@ -10,8 +10,10 @@ export default async function Layout({
 	const userPromise = getSessionUser();
 	return (
 		<AuthProvider user={userPromise}>
-			<Navbar />
-			{children}
+			<div className="flex w-full max-w-3xl flex-col gap-3 p-2">
+				<Navbar />
+				{children}
+			</div>
 		</AuthProvider>
 	);
 }

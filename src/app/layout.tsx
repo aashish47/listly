@@ -1,5 +1,5 @@
-import { ThemeProvider } from "@/components/contexts/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/contexts/theme-provider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Inter } from "next/font/google";
@@ -35,11 +35,7 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<div className="flex h-screen justify-center">
-						<div className="flex w-full max-w-3xl flex-col gap-3 p-2">
-							{children}
-						</div>
-					</div>
+					<div className="flex h-screen justify-center">{children}</div>
 					<Toaster richColors closeButton />
 				</ThemeProvider>
 			</body>

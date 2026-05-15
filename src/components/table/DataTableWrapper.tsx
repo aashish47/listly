@@ -1,8 +1,8 @@
-import InitialsProvider from "@/components/contexts/initials-provider";
-import ItemProvider from "@/components/contexts/item-provider";
-import ItemsProvider from "@/components/contexts/items-provider";
-import { SelectableItem } from "@/components/hooks/useListSelection";
 import DataTable from "@/components/table/DataTable";
+import InitialsProvider from "@/contexts/initials-provider";
+import ItemProvider from "@/contexts/item-provider";
+import ItemsProvider from "@/contexts/items-provider";
+import { SelectableItem } from "@/hooks/useListSelection";
 import {
 	fetchListItems,
 	fetchListItemsInitials,

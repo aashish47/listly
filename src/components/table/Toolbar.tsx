@@ -2,14 +2,14 @@ import AddButton from "@/components/buttons/AddButton";
 import AlphabetsDropdownButton from "@/components/buttons/AlphabetsDropdownButton";
 import CopyDropDownMenuButton from "@/components/buttons/CopyDropDownMenuButton";
 import DeleteButton from "@/components/buttons/DeleteButton";
-import { useItem } from "@/components/contexts/item-provider";
-import { useItems } from "@/components/contexts/items-provider";
+import Searchbar from "@/components/table/Searchbar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useItem } from "@/contexts/item-provider";
+import { useItems } from "@/contexts/items-provider";
 import {
 	SelectableItem,
 	UseListSelectionReturn,
-} from "@/components/hooks/useListSelection";
-import Searchbar from "@/components/table/Searchbar";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/hooks/useListSelection";
 import { addList, deleteManyLists } from "@/lib/actions/list-actions";
 import {
 	addListItem,
